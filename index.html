@@ -17,233 +17,333 @@
 </head>
 <body class="p-2 sm:p-4 max-w-4xl mx-auto space-y-4">
 
-    <!-- Header Banner -->
-    <div class="gradio-header p-4 shadow-md flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-            <div class="text-2xl">🩺</div>
-            <div>
-                <h1 class="text-lg font-bold">DocScribe EMR Pro</h1>
-                <p class="text-xs text-slate-300">AI-Powered GP OPD Practice Suite</p>
-            </div>
-        </div>
-        <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-xs text-slate-200 font-mono">Cloud Active</span>
-        </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="gradio-card p-1 flex space-x-4 border-b border-slate-200">
-        <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
-        <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records & Search</button>
-        <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Practice Analytics</button>
-    </div>
-
-    <!-- TAB 1: NEW CONSULTATION -->
-    <div id="tab1" class="space-y-4">
-        
-        <!-- Patient Details -->
-        <div class="gradio-card p-4 space-y-3">
-            <div class="flex items-center space-x-2">
-                <span class="text-base">👤</span>
-                <span class="font-bold text-sm text-slate-800">Patient Details & Vital Signs</span>
+    <!-- LOGIN / SIGNUP MODAL -->
+    <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="gradio-card max-w-md w-full p-6 space-y-4">
+            <div class="text-center space-y-1">
+                <div class="text-3xl">🩺</div>
+                <h2 id="authTitle" class="text-xl font-bold text-slate-800">Doctor Login</h2>
+                <p class="text-xs text-slate-500">Access your private patient records & EMR portal</p>
             </div>
 
-            <input type="hidden" id="doctor_id" value="1f94aded-5a8b-438e-9eb2-0f533cc14a65">
-            <input type="hidden" id="doctor_name" value="Dr. M. Officer">
-            <input type="hidden" id="doctor_qualification" value="MBBS">
-            <input type="hidden" id="hospital_name" value="Primary Health Center">
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="space-y-3">
                 <div>
-                    <span class="badge-purple">Patient Name</span>
-                    <input type="text" id="patient_name" placeholder="e.g. Rahul Sharma" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
+                    <span class="badge-purple">Email / Username</span>
+                    <input type="email" id="authEmail" placeholder="doctor@clinic.com" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
                 </div>
                 <div>
-                    <span class="badge-purple">Phone Number</span>
-                    <input type="tel" id="patient_phone" placeholder="e.g. 9876543210" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
+                    <span class="badge-purple">Password</span>
+                    <input type="password" id="authPassword" placeholder="••••••••" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
                 </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
-                <div>
-                    <span class="badge-purple">BP (mmHg)</span>
-                    <input type="text" id="v_bp" placeholder="120/80" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <span class="badge-purple">Pulse (bpm)</span>
-                    <input type="text" id="v_pulse" placeholder="72" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <span class="badge-purple">SpO2 (%)</span>
-                    <input type="text" id="v_spo2" placeholder="98" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <span class="badge-purple">Temp (°F)</span>
-                    <input type="text" id="v_temp" placeholder="98.6" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-                </div>
-                <div>
-                    <span class="badge-purple">RBS (mg/dL)</span>
-                    <input type="text" id="v_rbs" placeholder="110" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-                </div>
-            </div>
-
-            <div>
-                <span class="badge-purple">Primary Diagnosis Selection</span>
-                <input type="text" id="diagnosis" placeholder="Other (Let AI Extract from Dictation)" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md">
-            </div>
-        </div>
-
-        <!-- Voice Scribe -->
-        <div class="gradio-card p-4 space-y-3">
-            <div class="gradio-section-header">
-                🎙️ Voice Scribe & Clinical Notes (Supports Gujarati / Hindi / English)
-            </div>
-
-            <div class="flex items-center space-x-2 pt-1">
-                <button type="button" id="micBtn" onclick="toggleMic()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
-                    🎙️ Record Audio Dictation
-                </button>
-                <button type="button" id="aiExtractBtn" onclick="runAIExtract()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
-                    ✨ AI Extract & Auto-Fill
+                <button type="button" id="authPrimaryBtn" onclick="handleAuthSubmit()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-2.5 rounded-md shadow transition">
+                    Sign In to Portal
                 </button>
             </div>
 
-            <div>
-                <span class="badge-purple">Raw Clinical Notes (Type or Dictate)</span>
-                <textarea id="rawDictation" rows="3" placeholder="e.g., 45yo M presenting with fever 3 days, ઉધરસ અને માથાનો દુખાવો..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
+            <div class="text-center pt-2 border-t border-slate-100">
+                <button type="button" id="authToggleBtn" onclick="toggleAuthMode()" class="text-xs text-indigo-600 font-semibold hover:underline">
+                    Need an account? Register Doctor Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="mainApp" class="space-y-4 hidden">
+
+        <!-- Header Banner -->
+        <div class="gradio-header p-4 shadow-md flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="text-2xl">🩺</div>
+                <div>
+                    <h1 class="text-lg font-bold">DocScribe EMR Pro</h1>
+                    <p class="text-xs text-slate-300">AI-Powered GP OPD Practice Suite</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700">
+                <span id="userBadge" class="text-xs text-emerald-400 font-mono font-bold">doctor@clinic.com</span>
+                <button type="button" onclick="logout()" class="text-xs bg-red-500/20 text-red-300 hover:bg-red-500/40 px-2 py-0.5 rounded border border-red-500/30">Logout</button>
             </div>
         </div>
 
-        <!-- Prescription Builder -->
-        <div class="gradio-card p-4 space-y-3">
-            <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
+        <!-- Navigation Tabs -->
+        <div class="gradio-card p-1 flex space-x-4 border-b border-slate-200">
+            <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
+            <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records & Search</button>
+            <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Practice Analytics</button>
+        </div>
 
-            <div>
-                <span class="badge-purple">⭐ Quick Drug Catalog Select</span>
-                <select id="drugCatalog" onchange="applyDrugCatalog()" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md bg-white">
-                    <option value="">-- Select Favorite Drug --</option>
-                    <option value="Tab Paracetamol 650mg | 1 TSF PO | BD | 3 days">Tab Paracetamol 650mg (BD x 3 days)</option>
-                    <option value="Tab Pantoprazole 40mg | 1 Tab PO | OD | 5 days">Tab Pantoprazole 40mg (OD x 5 days)</option>
-                    <option value="Tab Amoxicillin 500mg | 1 Cap PO | TDS | 5 days">Tab Amoxicillin 500mg (TDS x 5 days)</option>
-                </select>
+        <!-- TAB 1: NEW CONSULTATION -->
+        <div id="tab1" class="space-y-4">
+            
+            <div class="gradio-card p-4 space-y-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-base">👤</span>
+                    <span class="font-bold text-sm text-slate-800">Patient Details & Vital Signs</span>
+                </div>
+
+                <input type="hidden" id="doctor_id" value="">
+                <input type="hidden" id="doctor_name" value="Dr. M. Officer">
+                <input type="hidden" id="doctor_qualification" value="MBBS">
+                <input type="hidden" id="hospital_name" value="Primary Health Center">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <span class="badge-purple">Patient Name</span>
+                        <input type="text" id="patient_name" placeholder="e.g. Rahul Sharma" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Phone Number</span>
+                        <input type="tel" id="patient_phone" placeholder="e.g. 9876543210" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
+                    <div>
+                        <span class="badge-purple">BP (mmHg)</span>
+                        <input type="text" id="v_bp" placeholder="120/80" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Pulse (bpm)</span>
+                        <input type="text" id="v_pulse" placeholder="72" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">SpO2 (%)</span>
+                        <input type="text" id="v_spo2" placeholder="98" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Temp (°F)</span>
+                        <input type="text" id="v_temp" placeholder="98.6" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">RBS (mg/dL)</span>
+                        <input type="text" id="v_rbs" placeholder="110" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                </div>
+
+                <div>
+                    <span class="badge-purple">Primary Diagnosis Selection</span>
+                    <input type="text" id="diagnosis" placeholder="Other (Let AI Extract from Dictation)" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md">
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div>
-                    <span class="badge-purple">Drug Name</span>
-                    <input type="text" id="rx_name" placeholder="e.g., Tab Paracetamol" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+            <!-- Voice Scribe -->
+            <div class="gradio-card p-4 space-y-3">
+                <div class="gradio-section-header">
+                    🎙️ Voice Scribe & Clinical Notes (Supports Gujarati / Hindi / English)
                 </div>
-                <div>
-                    <span class="badge-purple">Dose / Route</span>
-                    <input type="text" id="rx_dose" placeholder="e.g., 650mg PO" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+
+                <div class="flex items-center space-x-2 pt-1">
+                    <button type="button" id="micBtn" onclick="toggleMic()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
+                        🎙️ Record Audio Dictation
+                    </button>
+                    <button type="button" id="aiExtractBtn" onclick="runAIExtract()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
+                        ✨ AI Extract & Auto-Fill
+                    </button>
                 </div>
+
                 <div>
-                    <span class="badge-purple">Frequency</span>
-                    <select id="rx_freq" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md bg-white">
-                        <option value="BD">BD</option>
-                        <option value="OD">OD</option>
-                        <option value="TDS">TDS</option>
-                        <option value="QID">QID</option>
-                        <option value="STAT">STAT</option>
+                    <span class="badge-purple">Raw Clinical Notes (Type or Dictate)</span>
+                    <textarea id="rawDictation" rows="3" placeholder="e.g., 45yo M presenting with fever 3 days, ઉધરસ અને માથાનો દુખાવો..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Prescription Builder -->
+            <div class="gradio-card p-4 space-y-3">
+                <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
+
+                <div>
+                    <span class="badge-purple">⭐ Quick Drug Catalog Select</span>
+                    <select id="drugCatalog" onchange="applyDrugCatalog()" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md bg-white">
+                        <option value="">-- Select Favorite Drug --</option>
+                        <option value="Tab Paracetamol 650mg | 1 TSF PO | BD | 3 days">Tab Paracetamol 650mg (BD x 3 days)</option>
+                        <option value="Tab Pantoprazole 40mg | 1 Tab PO | OD | 5 days">Tab Pantoprazole 40mg (OD x 5 days)</option>
+                        <option value="Tab Amoxicillin 500mg | 1 Cap PO | TDS | 5 days">Tab Amoxicillin 500mg (TDS x 5 days)</option>
                     </select>
                 </div>
-            </div>
 
-            <div>
-                <span class="badge-purple">Duration</span>
-                <input type="text" id="rx_duration" placeholder="e.g., 3 days" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
-            </div>
-
-            <button type="button" onclick="addDrugToList()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
-                ➕ Add Drug to Prescription
-            </button>
-
-            <div>
-                <span class="badge-purple">📄 Active Prescription List</span>
-                <textarea id="medications" rows="3" placeholder="Prescribed drugs will accumulate here..." class="w-full mt-1 p-2 text-xs font-mono border border-slate-300 rounded-md bg-slate-50"></textarea>
-            </div>
-        </div>
-
-        <!-- Review & Save -->
-        <div class="gradio-card p-4 space-y-3">
-            <div class="gradio-section-header">📅 Review & Follow-Up</div>
-
-            <div class="flex flex-wrap items-center gap-2">
-                <div class="flex-1 min-w-[200px]">
-                    <span class="badge-purple">Next Follow-up Date</span>
-                    <input type="date" id="followup_date" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div>
+                        <span class="badge-purple">Drug Name</span>
+                        <input type="text" id="rx_name" placeholder="e.g., Tab Paracetamol" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Dose / Route</span>
+                        <input type="text" id="rx_dose" placeholder="e.g., 650mg PO" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Frequency</span>
+                        <select id="rx_freq" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md bg-white">
+                            <option value="BD">BD</option>
+                            <option value="OD">OD</option>
+                            <option value="TDS">TDS</option>
+                            <option value="QID">QID</option>
+                            <option value="STAT">STAT</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="flex space-x-1 pt-4">
-                    <button type="button" onclick="setFollowup(3)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">3 Days</button>
-                    <button type="button" onclick="setFollowup(5)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">5 Days</button>
-                    <button type="button" onclick="setFollowup(7)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">1 Week</button>
-                    <button type="button" onclick="setFollowup(14)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">2 Weeks</button>
+
+                <div>
+                    <span class="badge-purple">Duration</span>
+                    <input type="text" id="rx_duration" placeholder="e.g., 3 days" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
                 </div>
-            </div>
 
-            <button type="button" id="saveVisitBtn" onclick="saveRecord()" class="w-full bg-indigo-900 hover:bg-indigo-950 text-white font-bold text-sm py-2.5 rounded-md transition shadow-md">
-                ⚡ Generate AI SOAP & Save Record
-            </button>
+                <button type="button" onclick="addDrugToList()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
+                    ➕ Add Drug to Prescription
+                </button>
 
-            <div id="successBanner" class="hidden p-2 text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-md font-medium">
-                ✅ Consultation Saved Successfully!
-            </div>
-
-            <button type="button" onclick="shareWhatsApp()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
-                📲 Share Prescription via WhatsApp
-            </button>
-
-            <div class="border border-slate-200 rounded-md p-3 bg-slate-50 space-y-2">
-                <span class="font-bold text-xs text-slate-700">SOAP Note Output</span>
-                <textarea id="soap_note" rows="4" class="w-full p-2 text-xs border border-slate-300 rounded-md bg-white" placeholder="Generated SOAP structure will display here..."></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 2: PATIENT SEARCH -->
-    <div id="tab2" class="space-y-4 hidden">
-        <div class="gradio-card p-4 space-y-3">
-            <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
-            
-            <div class="flex space-x-2">
-                <input type="text" id="searchQuery" placeholder="Search by Patient Name or Phone Number..." class="flex-1 p-2 text-sm border border-slate-300 rounded-md">
-                <button type="button" onclick="searchPatients()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-md">Search</button>
-            </div>
-
-            <div id="searchResults" class="space-y-2 pt-2">
-                <p class="text-xs text-slate-500 italic">Enter patient name or mobile number above to fetch historical consultations.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 3: DYNAMIC PRACTICE ANALYTICS -->
-    <div id="tab3" class="space-y-4 hidden">
-        <div class="gradio-card p-4 space-y-4">
-            <div class="gradio-section-header">📊 Practice Case Analysis (Live Cloud Data)</div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
-                    <span class="text-xs text-blue-600 font-bold block">TOTAL CONSULTATIONS</span>
-                    <span id="stat_total" class="text-2xl font-bold text-blue-900">0</span>
-                </div>
-                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-center">
-                    <span class="text-xs text-emerald-600 font-bold block">TOP DIAGNOSIS</span>
-                    <span id="stat_top" class="text-lg font-bold text-emerald-900">N/A</span>
+                <div>
+                    <span class="badge-purple">📄 Active Prescription List</span>
+                    <textarea id="medications" rows="3" placeholder="Prescribed drugs will accumulate here..." class="w-full mt-1 p-2 text-xs font-mono border border-slate-300 rounded-md bg-slate-50"></textarea>
                 </div>
             </div>
 
-            <div class="border border-slate-200 p-3 rounded-lg bg-slate-50 text-xs text-slate-600">
-                <span class="font-bold text-slate-800 block mb-1">Diagnostic Breakdown:</span>
-                <div id="stat_breakdown" class="space-y-1">
-                    <p class="text-slate-400 italic">No records committed yet for this doctor.</p>
+            <!-- Review & Save -->
+            <div class="gradio-card p-4 space-y-3">
+                <div class="gradio-section-header">📅 Review & Follow-Up</div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex-1 min-w-[200px]">
+                        <span class="badge-purple">Next Follow-up Date</span>
+                        <input type="date" id="followup_date" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div class="flex space-x-1 pt-4">
+                        <button type="button" onclick="setFollowup(3)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">3 Days</button>
+                        <button type="button" onclick="setFollowup(5)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">5 Days</button>
+                        <button type="button" onclick="setFollowup(7)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">1 Week</button>
+                        <button type="button" onclick="setFollowup(14)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md font-medium">2 Weeks</button>
+                    </div>
+                </div>
+
+                <button type="button" id="saveVisitBtn" onclick="saveRecord()" class="w-full bg-indigo-900 hover:bg-indigo-950 text-white font-bold text-sm py-2.5 rounded-md transition shadow-md">
+                    ⚡ Generate AI SOAP & Save Record
+                </button>
+
+                <div id="successBanner" class="hidden p-2 text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-md font-medium">
+                    ✅ Consultation Saved Successfully!
+                </div>
+
+                <button type="button" onclick="shareWhatsApp()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
+                    📲 Share Prescription via WhatsApp
+                </button>
+
+                <div class="border border-slate-200 rounded-md p-3 bg-slate-50 space-y-2">
+                    <span class="font-bold text-xs text-slate-700">SOAP Note Output</span>
+                    <textarea id="soap_note" rows="4" class="w-full p-2 text-xs border border-slate-300 rounded-md bg-white" placeholder="Generated SOAP structure will display here..."></textarea>
                 </div>
             </div>
         </div>
+
+        <!-- TAB 2: PATIENT SEARCH -->
+        <div id="tab2" class="space-y-4 hidden">
+            <div class="gradio-card p-4 space-y-3">
+                <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
+                
+                <div class="flex space-x-2">
+                    <input type="text" id="searchQuery" placeholder="Search by Patient Name or Phone Number..." class="flex-1 p-2 text-sm border border-slate-300 rounded-md">
+                    <button type="button" onclick="searchPatients()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2 rounded-md">Search</button>
+                </div>
+
+                <div id="searchResults" class="space-y-2 pt-2">
+                    <p class="text-xs text-slate-500 italic">Enter patient name or mobile number above to fetch historical consultations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: DYNAMIC PRACTICE ANALYTICS -->
+        <div id="tab3" class="space-y-4 hidden">
+            <div class="gradio-card p-4 space-y-4">
+                <div class="gradio-section-header">📊 Practice Case Analysis (Live Cloud Data)</div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
+                        <span class="text-xs text-blue-600 font-bold block">TOTAL CONSULTATIONS</span>
+                        <span id="stat_total" class="text-2xl font-bold text-blue-900">0</span>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-center">
+                        <span class="text-xs text-emerald-600 font-bold block">TOP DIAGNOSIS</span>
+                        <span id="stat_top" class="text-lg font-bold text-emerald-900">N/A</span>
+                    </div>
+                </div>
+
+                <div class="border border-slate-200 p-3 rounded-lg bg-slate-50 text-xs text-slate-600">
+                    <span class="font-bold text-slate-800 block mb-1">Diagnostic Breakdown:</span>
+                    <div id="stat_breakdown" class="space-y-1">
+                        <p class="text-slate-400 italic">No records committed yet for this doctor account.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
+    let isSignupMode = false;
+
+    // Authentication Logic
+    function toggleAuthMode() {
+        isSignupMode = !isSignupMode;
+        document.getElementById("authTitle").innerText = isSignupMode ? "Register Doctor Account" : "Doctor Login";
+        document.getElementById("authPrimaryBtn").innerText = isSignupMode ? "Register Profile" : "Sign In to Portal";
+        document.getElementById("authToggleBtn").innerText = isSignupMode ? "Already have an account? Sign In" : "Need an account? Register Doctor Profile";
+    }
+
+    async function handleAuthSubmit() {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value.trim();
+
+        if (!email || !password) return alert("Please enter both email and password.");
+
+        const endpoint = isSignupMode ? "/api/v1/auth/signup" : "/api/v1/auth/login";
+        
+        try {
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                if (isSignupMode) {
+                    alert("Account registered successfully! You can now log in.");
+                    toggleAuthMode();
+                } else {
+                    localStorage.setItem("docscribe_token", data.access_token);
+                    localStorage.setItem("docscribe_user_id", data.user_id);
+                    localStorage.setItem("docscribe_email", data.email);
+                    initSession();
+                }
+            } else {
+                alert("Auth Failed: " + (data.detail || "Invalid credentials"));
+            }
+        } catch (err) {
+            alert("Connection Error: " + err.message);
+        }
+    }
+
+    function initSession() {
+        const userId = localStorage.getItem("docscribe_user_id");
+        const email = localStorage.getItem("docscribe_email");
+
+        if (userId && email) {
+            document.getElementById("doctor_id").value = userId;
+            document.getElementById("userBadge").innerText = email;
+            document.getElementById("authModal").classList.add("hidden");
+            document.getElementById("mainApp").classList.remove("hidden");
+        } else {
+            document.getElementById("authModal").classList.remove("hidden");
+            document.getElementById("mainApp").classList.add("hidden");
+        }
+    }
+
+    function logout() {
+        localStorage.clear();
+        location.reload();
+    }
+
+    window.onload = initSession;
 
     // Tab Switcher
     function switchTab(tabId) {
@@ -256,7 +356,7 @@
             }
         });
 
-        const target = document.getElementById(tabId);
+                const target = document.getElementById(tabId);
         if (target) target.classList.remove('hidden');
 
         const activeNav = tabId === 'tab1' ? 'navTab1' : tabId === 'tab2' ? 'navTab2' : 'navTab3';
@@ -324,7 +424,7 @@
 
     function toggleMic() {
         const micBtn = document.getElementById("micBtn");
-        if (!recognition) return alert("Speech recognition not supported on this mobile browser.");
+        if (!recognition) return alert("Speech recognition not supported on this browser.");
 
         if (!isRecording) {
             try {
@@ -389,7 +489,7 @@
         btn.disabled = true;
 
         const payload = {
-             doctor_id: document.getElementById("doctor_id").value,
+            doctor_id: document.getElementById("doctor_id").value,
             doctor_name: document.getElementById("doctor_name").value,
             doctor_qualification: document.getElementById("doctor_qualification").value,
             hospital_name: document.getElementById("hospital_name").value,
@@ -490,7 +590,7 @@
                 const breakdown = data.breakdown;
                 const container = document.getElementById("stat_breakdown");
                 if (Object.keys(breakdown).length === 0) {
-                    container.innerHTML = "<p class='text-slate-400 italic'>No records committed yet for this doctor.</p>";
+                    container.innerHTML = "<p class='text-slate-400 italic'>No records committed yet for this doctor account.</p>";
                 } else {
                     container.innerHTML = Object.entries(breakdown).map(([diag, count]) => `
                         <div class="flex justify-between border-b border-slate-200 pb-1">
