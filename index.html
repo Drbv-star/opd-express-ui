@@ -28,7 +28,7 @@
         </div>
         <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-xs text-slate-200 font-mono">Cloud Ready</span>
+            <span class="text-xs text-slate-200 font-mono">Cloud Active</span>
         </div>
     </div>
 
@@ -42,7 +42,7 @@
     <!-- TAB 1: NEW CONSULTATION -->
     <div id="tab1" class="space-y-4">
         
-        <!-- Section 1: Patient Details & Vital Signs -->
+        <!-- Patient Details -->
         <div class="gradio-card p-4 space-y-3">
             <div class="flex items-center space-x-2">
                 <span class="text-base">👤</span>
@@ -65,7 +65,6 @@
                 </div>
             </div>
 
-            <!-- Vitals Grid -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
                 <div>
                     <span class="badge-purple">BP (mmHg)</span>
@@ -95,7 +94,7 @@
             </div>
         </div>
 
-        <!-- Section 2: Voice Scribe & Clinical Notes -->
+        <!-- Voice Scribe -->
         <div class="gradio-card p-4 space-y-3">
             <div class="gradio-section-header">
                 🎙️ Voice Scribe & Clinical Notes (Supports Gujarati / Hindi / English)
@@ -116,7 +115,7 @@
             </div>
         </div>
 
-        <!-- Section 3: Prescription Builder -->
+        <!-- Prescription Builder -->
         <div class="gradio-card p-4 space-y-3">
             <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
 
@@ -166,7 +165,7 @@
             </div>
         </div>
 
-        <!-- Section 4: Review & Save -->
+        <!-- Review & Save -->
         <div class="gradio-card p-4 space-y-3">
             <div class="gradio-section-header">📅 Review & Follow-Up</div>
 
@@ -218,34 +217,27 @@
         </div>
     </div>
 
-    <!-- TAB 3: PRACTICE ANALYTICS -->
+    <!-- TAB 3: DYNAMIC PRACTICE ANALYTICS -->
     <div id="tab3" class="space-y-4 hidden">
         <div class="gradio-card p-4 space-y-4">
-            <div class="gradio-section-header">📊 Practice Case Analysis</div>
+            <div class="gradio-section-header">📊 Practice Case Analysis (Live Cloud Data)</div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
                     <span class="text-xs text-blue-600 font-bold block">TOTAL CONSULTATIONS</span>
-                    <span class="text-2xl font-bold text-blue-900">28</span>
+                    <span id="stat_total" class="text-2xl font-bold text-blue-900">0</span>
                 </div>
                 <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-center">
                     <span class="text-xs text-emerald-600 font-bold block">TOP DIAGNOSIS</span>
-                    <span class="text-lg font-bold text-emerald-900">Acute Gastritis</span>
-                </div>
-                <div class="bg-purple-50 border border-purple-200 p-3 rounded-lg text-center">
-                    <span class="text-xs text-purple-600 font-bold block">AI DICTATION ACCURACY</span>
-                    <span class="text-2xl font-bold text-purple-900">98.4%</span>
+                    <span id="stat_top" class="text-lg font-bold text-emerald-900">N/A</span>
                 </div>
             </div>
 
             <div class="border border-slate-200 p-3 rounded-lg bg-slate-50 text-xs text-slate-600">
                 <span class="font-bold text-slate-800 block mb-1">Diagnostic Breakdown:</span>
-                <ul class="list-disc pl-4 space-y-1">
-                    <li>Acute Gastritis / Epigastric Pain — 42%</li>
-                    <li>Upper Respiratory Tract Infection (URTI) — 28%</li>
-                    <li>Essential Hypertension — 18%</li>
-                    <li>Other / General OPD — 12%</li>
-                </ul>
+                <div id="stat_breakdown" class="space-y-1">
+                    <p class="text-slate-400 italic">No records committed yet for this doctor.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -273,16 +265,18 @@
             navEl.classList.add('active');
             navEl.classList.remove('text-slate-500');
         }
+
+        if (tabId === 'tab3') loadAnalytics();
     }
 
-    // Followup Date Shortcuts
+    // Followup Shortcuts
     function setFollowup(days) {
         const d = new Date();
         d.setDate(d.getDate() + days);
         document.getElementById("followup_date").value = d.toISOString().split('T')[0];
     }
 
-    // Quick Drug Catalog Select
+    // Quick Drug Catalog
     function applyDrugCatalog() {
         const val = document.getElementById("drugCatalog").value;
         if (!val) return;
@@ -308,7 +302,7 @@
         document.getElementById("rx_duration").value = "";
     }
 
-    // Mic Recording Setup
+    // Voice Recorder
     let recognition;
     let isRecording = false;
 
@@ -330,7 +324,7 @@
 
     function toggleMic() {
         const micBtn = document.getElementById("micBtn");
-        if (!recognition) return alert("Speech recognition not supported on this browser.");
+        if (!recognition) return alert("Speech recognition not supported on this mobile browser.");
 
         if (!isRecording) {
             try {
@@ -395,7 +389,7 @@
         btn.disabled = true;
 
         const payload = {
-            doctor_id: document.getElementById("doctor_id").value,
+             doctor_id: document.getElementById("doctor_id").value,
             doctor_name: document.getElementById("doctor_name").value,
             doctor_qualification: document.getElementById("doctor_qualification").value,
             hospital_name: document.getElementById("hospital_name").value,
@@ -481,9 +475,36 @@
             container.innerHTML = "<p class='text-xs text-red-500'>Search failed: " + err.message + "</p>";
         }
     }
+
+    // Load Analytics
+    async function loadAnalytics() {
+        const docId = document.getElementById("doctor_id").value;
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/analytics/summary?doctor_id=${docId}`);
+            const data = await res.json();
+
+            if (res.ok) {
+                document.getElementById("stat_total").innerText = data.total_consultations;
+                document.getElementById("stat_top").innerText = data.top_diagnosis;
+
+                const breakdown = data.breakdown;
+                const container = document.getElementById("stat_breakdown");
+                if (Object.keys(breakdown).length === 0) {
+                    container.innerHTML = "<p class='text-slate-400 italic'>No records committed yet for this doctor.</p>";
+                } else {
+                    container.innerHTML = Object.entries(breakdown).map(([diag, count]) => `
+                        <div class="flex justify-between border-b border-slate-200 pb-1">
+                            <span>${diag}</span>
+                            <span class="font-bold text-indigo-600">${count} visit(s)</span>
+                        </div>
+                    `).join('');
+                }
+            }
+        } catch (err) {
+            console.log("Analytics Load Error:", err);
+        }
+    }
 </script>
 
 </body>
 </html>
-
- 
