@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocScribe EMR Pro</title>
+    <title>OPD Express AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #f8fafc; color: #1e293b; font-family: system-ui, -apple-system, sans-serif; }
@@ -13,16 +13,22 @@
         .tab-btn { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab-btn.active { border-bottom: 2px solid #2563eb; color: #2563eb; }
         .badge-purple { background-color: #ede9fe; color: #6d28d9; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 4px; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+        }
+        .print-only { display: none; }
     </style>
 </head>
 <body class="p-2 sm:p-4 max-w-4xl mx-auto space-y-4">
 
-    <!-- LOGIN / SIGNUP MODAL -->
-    <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
         <div class="gradio-card max-w-md w-full p-6 space-y-4">
             <div class="text-center space-y-1">
                 <div class="text-3xl">🩺</div>
-                <h2 id="authTitle" class="text-xl font-bold text-slate-800">Doctor Login</h2>
+                <h2 id="authTitle" class="text-xl font-bold text-slate-800">OPD Express AI — Doctor Login</h2>
                 <p class="text-xs text-slate-500">Access your private patient records & EMR portal</p>
             </div>
 
@@ -48,15 +54,13 @@
         </div>
     </div>
 
-    <!-- MAIN APP WRAPPER -->
-    <div id="mainApp" class="space-y-4 hidden">
+    <div id="mainApp" class="space-y-4 hidden no-print">
 
-        <!-- Header Banner -->
         <div class="gradio-header p-4 shadow-md flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center space-x-3">
                 <div class="text-2xl">🩺</div>
                 <div>
-                    <h1 class="text-lg font-bold">DocScribe EMR Pro</h1>
+                    <h1 class="text-lg font-bold">OPD Express AI</h1>
                     <p class="text-xs text-slate-300">AI-Powered GP OPD Practice Suite</p>
                 </div>
             </div>
@@ -66,14 +70,12 @@
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
         <div class="gradio-card p-1 flex space-x-4 border-b border-slate-200">
             <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
             <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records & Search</button>
             <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Practice Analytics</button>
         </div>
 
-        <!-- TAB 1: NEW CONSULTATION -->
         <div id="tab1" class="space-y-4">
             
             <div class="gradio-card p-4 space-y-3">
@@ -83,11 +85,23 @@
                 </div>
 
                 <input type="hidden" id="doctor_id" value="">
-                <input type="hidden" id="doctor_name" value="Dr. M. Officer">
-                <input type="hidden" id="doctor_qualification" value="MBBS">
-                <input type="hidden" id="hospital_name" value="Primary Health Center">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div>
+                        <span class="badge-purple">Doctor Name</span>
+                        <input type="text" id="doctor_name" value="Dr. M. Officer" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Qualifications</span>
+                        <input type="text" id="doctor_qualification" value="MBBS" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Clinic / Hospital</span>
+                        <input type="text" id="hospital_name" value="Primary Health Center" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
+                    </div>
+                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
                         <span class="badge-purple">Patient Name</span>
                         <input type="text" id="patient_name" placeholder="e.g. Rahul Sharma" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
@@ -127,15 +141,15 @@
                 </div>
             </div>
 
-            <!-- Voice Scribe -->
             <div class="gradio-card p-4 space-y-3">
-                <div class="gradio-section-header">
-                    🎙️ Voice Scribe & Clinical Notes (Supports Gujarati / Hindi / English)
+                <div class="gradio-section-header flex justify-between items-center">
+                    <span>🎙️ OPD Express AI Voice Scribe (Native Mobile Audio Upload)</span>
+                    <span id="recordingStatus" class="hidden text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold animate-pulse">● Recording Mic</span>
                 </div>
 
                 <div class="flex items-center space-x-2 pt-1">
                     <button type="button" id="micBtn" onclick="toggleMic()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
-                        🎙️ Record Audio Dictation
+                        🎙️ Start Audio Dictation
                     </button>
                     <button type="button" id="aiExtractBtn" onclick="runAIExtract()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm">
                         ✨ AI Extract & Auto-Fill
@@ -144,11 +158,10 @@
 
                 <div>
                     <span class="badge-purple">Raw Clinical Notes (Type or Dictate)</span>
-                    <textarea id="rawDictation" rows="3" placeholder="e.g., 45yo M presenting with fever 3 days, ઉધરસ અને માથાનો દુખાવો..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
+                    <textarea id="rawDictation" rows="3" placeholder="Dictate symptoms in Gujarati, Hindi, or English, or let the audio recorder stream directly to Gemini..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
                 </div>
             </div>
 
-            <!-- Prescription Builder -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
 
@@ -198,9 +211,8 @@
                 </div>
             </div>
 
-            <!-- Review & Save -->
             <div class="gradio-card p-4 space-y-3">
-                <div class="gradio-section-header">📅 Review & Follow-Up</div>
+                <div class="gradio-section-header">📅 Review, Save & Print</div>
 
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="flex-1 min-w-[200px]">
@@ -216,16 +228,21 @@
                 </div>
 
                 <button type="button" id="saveVisitBtn" onclick="saveRecord()" class="w-full bg-indigo-900 hover:bg-indigo-950 text-white font-bold text-sm py-2.5 rounded-md transition shadow-md">
-                    ⚡ Generate AI SOAP & Save Record
+                    ⚡ Save Record to Cloud EMR
                 </button>
 
                 <div id="successBanner" class="hidden p-2 text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-md font-medium">
                     ✅ Consultation Saved Successfully!
                 </div>
 
-                <button type="button" onclick="shareWhatsApp()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
-                    📲 Share Prescription via WhatsApp
-                </button>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button type="button" onclick="shareWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
+                        📲 Share WhatsApp Rx
+                    </button>
+                    <button type="button" onclick="printPrescription()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs py-2 rounded-md transition shadow-sm">
+                        🖨️ Print PDF Prescription
+                    </button>
+                </div>
 
                 <div class="border border-slate-200 rounded-md p-3 bg-slate-50 space-y-2">
                     <span class="font-bold text-xs text-slate-700">SOAP Note Output</span>
@@ -234,7 +251,6 @@
             </div>
         </div>
 
-        <!-- TAB 2: PATIENT SEARCH -->
         <div id="tab2" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
@@ -250,10 +266,9 @@
             </div>
         </div>
 
-        <!-- TAB 3: DYNAMIC PRACTICE ANALYTICS -->
         <div id="tab3" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-4">
-                <div class="gradio-section-header">📊 Practice Case Analysis (Live Cloud Data)</div>
+                <div class="gradio-section-header">📊 Practice Case Analysis (OPD Express AI Cloud)</div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
@@ -277,188 +292,65 @@
 
     </div>
 
+    <div id="printSection" class="print-only text-black p-6">
+        <div class="border-b-2 border-slate-900 pb-3 mb-4 flex justify-between items-start">
+            <div>
+                <h1 id="pr_hName" class="text-xl font-bold uppercase tracking-wide"></h1>
+                <p id="pr_dName" class="text-sm font-semibold"></p>
+                <p id="pr_dQual" class="text-xs text-slate-600"></p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-500">OPD Express AI Rx</p>
+                <p id="pr_date" class="text-xs text-slate-700"></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 border-b border-slate-300 pb-3 mb-4 text-xs">
+            <p><strong>Patient Name:</strong> <span id="pr_pName"></span></p>
+            <p><strong>Mobile:</strong> <span id="pr_pPhone"></span></p>
+            <p><strong>Vitals:</strong> <span id="pr_vitals"></span></p>
+            <p><strong>Diagnosis:</strong> <span id="pr_diag"></span></p>
+        </div>
+
+        <div class="mb-6 space-y-1">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 border-b border-slate-300 pb-1">Rx / Prescribed Medications</h3>
+            <pre id="pr_meds" class="font-mono text-xs whitespace-pre-wrap pt-1"></pre>
+        </div>
+
+        <div class="mt-12 pt-4 border-t border-slate-300 flex justify-between items-end text-xs text-slate-600">
+            <div>
+                <p id="pr_followup"></p>
+            </div>
+            <div class="text-right">
+                <p class="font-bold">Doctor's Signature</p>
+                <p class="mt-8">______________________</p>
+            </div>
+        </div>
+    </div>
+
 <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
     let isSignupMode = false;
-
-    // Authentication Logic
-    function toggleAuthMode() {
-        isSignupMode = !isSignupMode;
-        document.getElementById("authTitle").innerText = isSignupMode ? "Register Doctor Account" : "Doctor Login";
-        document.getElementById("authPrimaryBtn").innerText = isSignupMode ? "Register Profile" : "Sign In to Portal";
-        document.getElementById("authToggleBtn").innerText = isSignupMode ? "Already have an account? Sign In" : "Need an account? Register Doctor Profile";
-    }
-
-    async function handleAuthSubmit() {
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value.trim();
-
-        if (!email || !password) return alert("Please enter both email and password.");
-
-        const endpoint = isSignupMode ? "/api/v1/auth/signup" : "/api/v1/auth/login";
-        
-        try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                if (isSignupMode) {
-                    alert("Account registered successfully! You can now log in.");
-                    toggleAuthMode();
-                } else {
-                    localStorage.setItem("docscribe_token", data.access_token);
-                    localStorage.setItem("docscribe_user_id", data.user_id);
-                    localStorage.setItem("docscribe_email", data.email);
-                    initSession();
-                }
+    let mediaRecorder;
+    let audioChunks = [];
+    let isAudioRecording = false;
+                recordedAudioBlob = null; // Reset blob after processing
             } else {
-                alert("Auth Failed: " + (data.detail || "Invalid credentials"));
+                // Otherwise fall back to typed/speech raw text
+                const text = document.getElementById("rawDictation").value.trim();
+                if (!text) {
+                    btn.innerText = "✨ AI Extract & Auto-Fill";
+                    btn.disabled = false;
+                    return alert("Please record audio or type clinical notes first!");
+                }
+
+                res = await fetch(`${API_BASE}/api/v1/ai/process-dictation`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ raw_text: text })
+                });
+                data = await res.json();
             }
-        } catch (err) {
-            alert("Connection Error: " + err.message);
-        }
-    }
-
-    function initSession() {
-        const userId = localStorage.getItem("docscribe_user_id");
-        const email = localStorage.getItem("docscribe_email");
-
-        if (userId && email) {
-            document.getElementById("doctor_id").value = userId;
-            document.getElementById("userBadge").innerText = email;
-            document.getElementById("authModal").classList.add("hidden");
-            document.getElementById("mainApp").classList.remove("hidden");
-        } else {
-            document.getElementById("authModal").classList.remove("hidden");
-            document.getElementById("mainApp").classList.add("hidden");
-        }
-    }
-
-    function logout() {
-        localStorage.clear();
-        location.reload();
-    }
-
-    window.onload = initSession;
-
-    // Tab Switcher
-    function switchTab(tabId) {
-        ['tab1', 'tab2', 'tab3'].forEach(t => document.getElementById(t).classList.add('hidden'));
-        ['navTab1', 'navTab2', 'navTab3'].forEach(n => {
-            const el = document.getElementById(n);
-            if (el) {
-                el.classList.remove('active');
-                el.classList.add('text-slate-500');
-            }
-        });
-
-                const target = document.getElementById(tabId);
-        if (target) target.classList.remove('hidden');
-
-        const activeNav = tabId === 'tab1' ? 'navTab1' : tabId === 'tab2' ? 'navTab2' : 'navTab3';
-        const navEl = document.getElementById(activeNav);
-        if (navEl) {
-            navEl.classList.add('active');
-            navEl.classList.remove('text-slate-500');
-        }
-
-        if (tabId === 'tab3') loadAnalytics();
-    }
-
-    // Followup Shortcuts
-    function setFollowup(days) {
-        const d = new Date();
-        d.setDate(d.getDate() + days);
-        document.getElementById("followup_date").value = d.toISOString().split('T')[0];
-    }
-
-    // Quick Drug Catalog
-    function applyDrugCatalog() {
-        const val = document.getElementById("drugCatalog").value;
-        if (!val) return;
-        const p = val.split(" | ");
-        document.getElementById("rx_name").value = p[0] || "";
-        document.getElementById("rx_dose").value = p[1] || "";
-        document.getElementById("rx_freq").value = p[2] || "BD";
-        document.getElementById("rx_duration").value = p[3] || "";
-    }
-
-    // Add Drug to List
-    function addDrugToList() {
-        const name = document.getElementById("rx_name").value.trim();
-        const dose = document.getElementById("rx_dose").value.trim();
-        const freq = document.getElementById("rx_freq").value;
-        const dur = document.getElementById("rx_duration").value.trim();
-
-        if (!name) return alert("Enter drug name first!");
-        document.getElementById("medications").value += `${name} - ${dose} - ${freq} x ${dur}\n`;
-
-        document.getElementById("rx_name").value = "";
-        document.getElementById("rx_dose").value = "";
-        document.getElementById("rx_duration").value = "";
-    }
-
-    // Voice Recorder
-    let recognition;
-    let isRecording = false;
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'en-IN';
-
-        recognition.onresult = (event) => {
-            let transcript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                transcript += event.results[i][0].transcript;
-            }
-            document.getElementById("rawDictation").value = transcript;
-        };
-    }
-
-    function toggleMic() {
-        const micBtn = document.getElementById("micBtn");
-        if (!recognition) return alert("Speech recognition not supported on this browser.");
-
-        if (!isRecording) {
-            try {
-                recognition.start();
-                isRecording = true;
-                micBtn.innerText = "⏹️ Stop Recording";
-                micBtn.className = "bg-red-600 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
-            } catch (err) {
-                console.log(err);
-            }
-        } else {
-            recognition.stop();
-            isRecording = false;
-            micBtn.innerText = "🎙️ Record Audio Dictation";
-            micBtn.className = "bg-indigo-600 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
-        }
-    }
-
-    // AI Extract
-    async function runAIExtract() {
-        const text = document.getElementById("rawDictation").value.trim();
-        if (!text) return alert("Type or dictate clinical notes first!");
-
-        const btn = document.getElementById("aiExtractBtn");
-        btn.innerText = "⏳ Extracting...";
-        btn.disabled = true;
-
-        try {
-            const res = await fetch(`${API_BASE}/api/v1/ai/process-dictation`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ raw_text: text })
-            });
-            const data = await res.json();
 
             if (res.ok) {
                 if (data.patient_name) document.getElementById("patient_name").value = data.patient_name;
@@ -468,7 +360,7 @@
                 if (data.soap_note) document.getElementById("soap_note").value = data.soap_note;
                 if (data.medications) document.getElementById("medications").value = data.medications;
                 if (data.followup_date) document.getElementById("followup_date").value = data.followup_date;
-                alert("✨ AI Auto-Fill Complete!");
+                alert("✨ OPD Express AI Extraction Complete!");
             } else {
                 alert("AI Processing Failed: " + (data.detail || "Error connecting to server"));
             }
@@ -503,7 +395,7 @@
         };
 
         if (!payload.patient_name || !payload.patient_phone) {
-            btn.innerText = "⚡ Generate AI SOAP & Save Record";
+            btn.innerText = "⚡ Save Record to Cloud EMR";
             btn.disabled = false;
             return alert("Patient Name and Phone Number are required!");
         }
@@ -525,7 +417,7 @@
         } catch (err) {
             alert("Save Error: " + err.message);
         } finally {
-            btn.innerText = "⚡ Generate AI SOAP & Save Record";
+            btn.innerText = "⚡ Save Record to Cloud EMR";
             btn.disabled = false;
         }
     }
@@ -539,8 +431,26 @@
 
         if (!pPhone) return alert("Enter patient phone number!");
 
-        const msg = `🏥 *Primary Health Center*\n👤 *Patient:* ${pName}\n🩺 *Diagnosis:* ${diagnosis}\n\n💊 *Rx:*\n${meds}`;
+        const msg = `🏥 *${document.getElementById("hospital_name").value}*\n👤 *Patient:* ${pName}\n🩺 *Diagnosis:* ${diagnosis}\n\n💊 *Rx:*\n${meds}\n\n_OPD Express AI_`;
         window.open(`https://wa.me/91${pPhone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // Print Prescription
+    function printPrescription() {
+        document.getElementById("pr_hName").innerText = document.getElementById("hospital_name").value;
+        document.getElementById("pr_dName").innerText = document.getElementById("doctor_name").value;
+        document.getElementById("pr_dQual").innerText = document.getElementById("doctor_qualification").value;
+        document.getElementById("pr_date").innerText = new Date().toLocaleDateString('en-IN');
+        document.getElementById("pr_pName").innerText = document.getElementById("patient_name").value;
+        document.getElementById("pr_pPhone").innerText = document.getElementById("patient_phone").value;
+        document.getElementById("pr_vitals").innerText = `BP: ${document.getElementById("v_bp").value}, Pulse: ${document.getElementById("v_pulse").value}`;
+        document.getElementById("pr_diag").innerText = document.getElementById("diagnosis").value;
+        document.getElementById("pr_meds").innerText = document.getElementById("medications").value;
+        
+        const fu = document.getElementById("followup_date").value;
+        document.getElementById("pr_followup").innerText = fu ? `Next Follow-up Date: ${fu}` : '';
+
+        window.print();
     }
 
     // Search Patients
