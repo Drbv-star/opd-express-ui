@@ -24,6 +24,7 @@
 </head>
 <body class="p-2 sm:p-4 max-w-4xl mx-auto space-y-4">
 
+    <!-- LOGIN / SIGNUP MODAL -->
     <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
         <div class="gradio-card max-w-md w-full p-6 space-y-4">
             <div class="text-center space-y-1">
@@ -38,7 +39,7 @@
                     <input type="email" id="authEmail" placeholder="doctor@clinic.com" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
                 </div>
                 <div>
-                    <span class="badge-purple">Password</span>
+                    <span class="badge-purple">Password (Min. 6 chars)</span>
                     <input type="password" id="authPassword" placeholder="••••••••" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
                 </div>
                 <button type="button" id="authPrimaryBtn" onclick="handleAuthSubmit()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm py-2.5 rounded-md shadow transition">
@@ -53,9 +54,10 @@
             </div>
         </div>
     </div>
-
+        <!-- MAIN APP WRAPPER -->
     <div id="mainApp" class="space-y-4 hidden no-print">
 
+        <!-- Header Banner -->
         <div class="gradio-header p-4 shadow-md flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center space-x-3">
                 <div class="text-2xl">🩺</div>
@@ -70,12 +72,14 @@
             </div>
         </div>
 
+        <!-- Navigation Tabs -->
         <div class="gradio-card p-1 flex space-x-4 border-b border-slate-200">
             <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
             <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records & Search</button>
             <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Practice Analytics</button>
         </div>
 
+        <!-- TAB 1: NEW CONSULTATION -->
         <div id="tab1" class="space-y-4">
             
             <div class="gradio-card p-4 space-y-3">
@@ -141,6 +145,7 @@
                 </div>
             </div>
 
+            <!-- Voice Scribe -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header flex justify-between items-center">
                     <span>🎙️ OPD Express AI Voice Scribe (Native Mobile Audio Upload)</span>
@@ -162,6 +167,7 @@
                 </div>
             </div>
 
+            <!-- Prescription Builder -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
 
@@ -211,6 +217,7 @@
                 </div>
             </div>
 
+            <!-- Review & Save -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">📅 Review, Save & Print</div>
 
@@ -251,6 +258,7 @@
             </div>
         </div>
 
+        <!-- TAB 2: PATIENT SEARCH -->
         <div id="tab2" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
@@ -266,6 +274,7 @@
             </div>
         </div>
 
+        <!-- TAB 3: ANALYTICS -->
         <div id="tab3" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-4">
                 <div class="gradio-section-header">📊 Practice Case Analysis (OPD Express AI Cloud)</div>
@@ -292,6 +301,7 @@
 
     </div>
 
+    <!-- PRINTABLE PRESCRIPTION CONTAINER -->
     <div id="printSection" class="print-only text-black p-6">
         <div class="border-b-2 border-slate-900 pb-3 mb-4 flex justify-between items-start">
             <div>
@@ -327,16 +337,196 @@
             </div>
         </div>
     </div>
-
-<script>
+    <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
     let isSignupMode = false;
-    let mediaRecorder;
+    let mediaRecorder = null;
     let audioChunks = [];
     let isAudioRecording = false;
-                recordedAudioBlob = null; // Reset blob after processing
+    let recordedAudioBlob = null;
+
+    // Authentication
+    function toggleAuthMode() {
+        isSignupMode = !isSignupMode;
+        document.getElementById("authTitle").innerText = isSignupMode ? "Register Doctor Profile" : "OPD Express AI — Doctor Login";
+        document.getElementById("authPrimaryBtn").innerText = isSignupMode ? "Register Profile" : "Sign In to Portal";
+        document.getElementById("authToggleBtn").innerText = isSignupMode ? "Already have an account? Sign In" : "Need an account? Register Doctor Profile";
+    }
+
+    async function handleAuthSubmit() {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value.trim();
+
+        if (!email || !password) return alert("Please enter both email and password.");
+        if (password.length < 6) return alert("Password must be at least 6 characters long.");
+
+        const endpoint = isSignupMode ? "/api/v1/auth/signup" : "/api/v1/auth/login";
+        
+        try {
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                if (isSignupMode) {
+                    alert("Account registered successfully! You can now log in.");
+                    toggleAuthMode();
+                } else {
+                    localStorage.setItem("docscribe_token", data.access_token);
+                    localStorage.setItem("docscribe_user_id", data.user_id);
+                    localStorage.setItem("docscribe_email", data.email);
+                    initSession();
+                }
             } else {
-                // Otherwise fall back to typed/speech raw text
+                alert("Auth Failed: " + (data.detail || "Invalid credentials"));
+            }
+        } catch (err) {
+            alert("Connection Error: " + err.message);
+        }
+    }
+
+    function initSession() {
+        const userId = localStorage.getItem("docscribe_user_id");
+        const email = localStorage.getItem("docscribe_email");
+
+        if (userId && email) {
+            document.getElementById("doctor_id").value = userId;
+            document.getElementById("userBadge").innerText = email;
+            document.getElementById("authModal").classList.add("hidden");
+            document.getElementById("mainApp").classList.remove("hidden");
+        } else {
+            document.getElementById("authModal").classList.remove("hidden");
+            document.getElementById("mainApp").classList.add("hidden");
+        }
+    }
+
+    function logout() {
+        localStorage.clear();
+        location.reload();
+    }
+
+    window.onload = initSession;
+
+    // Navigation Tab Switcher
+    function switchTab(tabId) {
+        ['tab1', 'tab2', 'tab3'].forEach(t => {
+            const el = document.getElementById(t);
+            if (el) el.classList.add('hidden');
+        });
+        
+        ['navTab1', 'navTab2', 'navTab3'].forEach(n => {
+            const navEl = document.getElementById(n);
+            if (navEl) {
+                navEl.classList.remove('active');
+                navEl.classList.add('text-slate-500');
+            }
+        });
+
+        const target = document.getElementById(tabId);
+        if (target) target.classList.remove('hidden');
+
+        const activeNav = tabId === 'tab1' ? 'navTab1' : tabId === 'tab2' ? 'navTab2' : 'navTab3';
+        const activeNavEl = document.getElementById(activeNav);
+        if (activeNavEl) {
+            activeNavEl.classList.add('active');
+            activeNavEl.classList.remove('text-slate-500');
+        }
+
+        if (tabId === 'tab3') loadAnalytics();
+    }
+
+    // Followup Shortcuts
+    function setFollowup(days) {
+        const d = new Date();
+        d.setDate(d.getDate() + days);
+        document.getElementById("followup_date").value = d.toISOString().split('T')[0];
+    }
+
+    // Quick Drug Catalog
+    function applyDrugCatalog() {
+        const val = document.getElementById("drugCatalog").value;
+        if (!val) return;
+        const p = val.split(" | ");
+        document.getElementById("rx_name").value = p[0] || "";
+        document.getElementById("rx_dose").value = p[1] || "";
+        document.getElementById("rx_freq").value = p[2] || "BD";
+        document.getElementById("rx_duration").value = p[3] || "";
+    }
+
+    // Add Drug to List
+    function addDrugToList() {
+        const name = document.getElementById("rx_name").value.trim();
+        const dose = document.getElementById("rx_dose").value.trim();
+        const freq = document.getElementById("rx_freq").value;
+        const dur = document.getElementById("rx_duration").value.trim();
+
+        if (!name) return alert("Enter drug name first!");
+        document.getElementById("medications").value += `${name} - ${dose} - ${freq} x ${dur}\n`;
+
+        document.getElementById("rx_name").value = "";
+        document.getElementById("rx_dose").value = "";
+        document.getElementById("rx_duration").value = "";
+    }
+
+    // Native Mobile Audio Recorder
+    async function toggleMic() {
+        const micBtn = document.getElementById("micBtn");
+        const status = document.getElementById("recordingStatus");
+
+        if (!isAudioRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                };
+
+                mediaRecorder.start();
+                isAudioRecording = true;
+                micBtn.innerText = "⏹️ Stop & Save Audio";
+                micBtn.className = "bg-red-600 hover:bg-red-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
+                status.classList.remove("hidden");
+            } catch (err) {
+                alert("Microphone Access Error: Please allow mic permissions in your browser.");
+            }
+        } else {
+            if (mediaRecorder) mediaRecorder.stop();
+            isAudioRecording = false;
+            micBtn.innerText = "🎙️ Start Audio Dictation";
+            micBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
+            status.classList.add("hidden");
+            alert("Audio dictation captured! Now tap '✨ AI Extract & Auto-Fill' to process directly with Gemini.");
+        }
+    }
+        // AI Extract
+    async function runAIExtract() {
+        const btn = document.getElementById("aiExtractBtn");
+        btn.innerText = "⏳ Extracting via Gemini...";
+        btn.disabled = true;
+
+        try {
+            let res, data;
+
+            if (recordedAudioBlob) {
+                const formData = new FormData();
+                formData.append("file", recordedAudioBlob, "dictation.webm");
+
+                res = await fetch(`${API_BASE}/api/v1/ai/process-audio`, {
+                    method: "POST",
+                    body: formData
+                });
+                data = await res.json();
+                recordedAudioBlob = null;
+            } else {
                 const text = document.getElementById("rawDictation").value.trim();
                 if (!text) {
                     btn.innerText = "✨ AI Extract & Auto-Fill";
