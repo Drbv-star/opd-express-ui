@@ -3,74 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DocScribe EMR Pro</title>
-    <!-- Tailwind CSS CDN -->
+    <title>DocScribe EMR Pro — Clinical Workstation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .card-print { border: none !important; shadow: none !important; background: transparent !important; }
+        }
+        .print-only { display: none; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-6 font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-3 sm:p-6 font-sans">
 
-    <div class="max-w-3xl mx-auto space-y-6">
+    <div class="max-w-4xl mx-auto space-y-6 no-print">
         
-        <!-- App Header -->
-        <header class="flex items-center justify-between bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-xl">
+        <header class="flex flex-wrap items-center justify-between bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-xl gap-3">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/30">
-                    <i class="fa-solid font-stethoscope"></i>🩺
+                    🩺
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-white tracking-wide">DocScribe EMR Pro</h1>
-                    <p class="text-xs text-slate-400">AI-Powered Cloud Clinical Workspace</p>
+                    <p class="text-xs text-slate-400">AI-Powered GP OPD Practice Suite</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-2 bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-xs text-slate-300 font-mono">Render API Online</span>
+            <div class="flex items-center space-x-2">
+                <button id="searchModalBtn" class="bg-slate-700 hover:bg-slate-600 text-xs text-slate-200 px-3 py-2 rounded-lg border border-slate-600 transition">
+                    🔍 Patient History Lookup
+                </button>
+                <div class="flex items-center space-x-2 bg-slate-900/60 px-3 py-2 rounded-lg border border-slate-700">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs text-slate-300 font-mono">Cloud Active</span>
+                </div>
             </div>
         </header>
 
-        <!-- Voice Dictation Studio -->
         <section class="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-xl space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                    <i class="fa-solid fa-microphone text-indigo-400"></i> AI Ambient Dictation
-                </h2>
-                <span id="recordingBadge" class="hidden text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full font-medium animate-pulse">
-                    ● Recording Live
-                </span>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">🎙️ Multi-Lingual AI Voice Dictation (EN / HI / GUJ)</h2>
+                <span id="recordingBadge" class="hidden text-xs bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full font-medium animate-pulse">● Live Mic Active</span>
             </div>
 
             <textarea id="rawDictation" rows="3" 
-                class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-sm"
-                placeholder="Tap 'Start Recording' and speak patient symptoms, vitals, diagnosis, and prescription details naturally..."></textarea>
+                class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3.5 text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Dictate symptoms, vitals, diagnosis, and prescription details in English, Hindi, or Gujarati..."></textarea>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button type="button" id="micBtn" 
-                    class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition border border-slate-600 active:scale-[0.99]">
+                <button type="button" id="micBtn" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-3 px-4 rounded-xl border border-slate-600 flex items-center justify-center gap-2">
                     <span>🎙️ Start Dictation</span>
                 </button>
-                <button type="button" id="aiBtn" 
-                    class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center space-x-2 transition shadow-lg shadow-indigo-600/30 active:scale-[0.99]">
-                    <span>✨ AI Process & Auto-Fill</span>
+                <button type="button" id="aiBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                    <span>✨ AI Process & Extract (Gujarati Rx Auto-Translate)</span>
                 </button>
             </div>
         </section>
 
-        <!-- Clinical Consultation Form -->
         <form id="emrForm" class="bg-slate-800 rounded-2xl p-5 border border-slate-700 shadow-xl space-y-5">
             
-            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <i class="fa-solid fa-notes-medical text-indigo-400"></i> Patient Clinical Record
-            </h2>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">👨‍⚕️ Medical Facility & Doctor Profile</h2>
 
-            <!-- Doctor Metadata -->
-            <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Doctor UUID / Auth Reference</label>
-                <input type="text" id="doctor_id" value="1f94aded-5a8b-438e-9eb2-0f533cc14a65" required
-                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-300 text-xs font-mono focus:outline-none focus:border-indigo-500">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Doctor Name</label>
+                    <input type="text" id="doctor_name" value="Dr. M. Officer" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Qualifications</label>
+                    <input type="text" id="doctor_qualification" value="MBBS" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Clinic / Hospital Name</label>
+                    <input type="text" id="hospital_name" value="Primary Health Center" required
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
             </div>
 
-            <!-- Patient Demographics -->
+            <input type="hidden" id="doctor_id" value="1f94aded-5a8b-438e-9eb2-0f533cc14a65">
+
+            <hr class="border-slate-700">
+
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">📋 Clinical Record</h2>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Patient Name</label>
@@ -84,7 +101,6 @@
                 </div>
             </div>
 
-            <!-- Vitals & Diagnosis -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Vitals</label>
@@ -93,48 +109,101 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Diagnosis</label>
-                    <input type="text" id="diagnosis" placeholder="e.g. Acute Gastritis / Hypertension"
+                    <input type="text" id="diagnosis" placeholder="e.g. Acute Gastritis"
                         class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
                 </div>
             </div>
 
-            <!-- SOAP Note -->
             <div>
                 <label class="block text-xs font-medium text-slate-400 mb-1">SOAP Clinical Notes</label>
-                <textarea id="soap_note" rows="3" placeholder="Subjective complaints, objective observations..."
+                <textarea id="soap_note" rows="2" placeholder="Subjective complaints, clinical findings..."
                     class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:outline-none focus:border-indigo-500"></textarea>
             </div>
 
-            <!-- Rx Medications -->
-            <div>
-                <label class="block text-xs font-medium text-slate-400 mb-1">Rx / Prescriptions</label>
-                <textarea id="medications" rows="3" placeholder="Tab Pantoprazole 40mg OD x 5 days..."
-                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:outline-none focus:border-indigo-500 font-mono"></textarea>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Prescription (English)</label>
+                    <textarea id="medications" rows="3" placeholder="Tab Pantoprazole 40mg OD x 5 days..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm font-mono focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Prescription (Gujarati Script / દર્દી માટે સુચના)</label>
+                    <textarea id="medications_gujarati" rows="3" placeholder="૧ ગોળી સવારે ભૂખ્યા પેટે ૫ દિવસ માટે..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
             </div>
 
-            <!-- Follow-up -->
             <div>
                 <label class="block text-xs font-medium text-slate-400 mb-1">Follow-up Date</label>
                 <input type="date" id="followup_date"
                     class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-slate-200 text-sm focus:outline-none focus:border-indigo-500">
             </div>
 
-            <!-- Submit Button -->
-            <button type="submit" id="saveBtn" 
-                class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-600/30 transition active:scale-[0.99] flex items-center justify-center space-x-2 text-base">
-                <span>💾 Commit Record to Supabase EMR</span>
-            </button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <button type="submit" id="saveBtn" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-emerald-600/30 transition text-sm flex items-center justify-center gap-1">
+                    💾 Commit to Cloud EMR
+                </button>
+                <button type="button" id="waBtn" 
+                    class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-green-600/30 transition text-sm flex items-center justify-center gap-1">
+                    📲 Share WhatsApp Rx
+                </button>
+                <button type="button" id="printBtn" 
+                    class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-sky-600/30 transition text-sm flex items-center justify-center gap-1">
+                    🖨️ Print Prescription
+                </button>
+            </div>
         </form>
 
-        <!-- Status Alert Banner -->
         <div id="status" class="hidden p-4 rounded-xl border text-sm font-medium transition"></div>
 
+    </div>
+
+    <div id="printSection" class="print-only text-black p-8 max-w-2xl mx-auto">
+        <div class="border-b-2 border-black pb-4 mb-4 flex justify-between items-start">
+            <div>
+                <h1 id="p_hName" class="text-2xl font-bold uppercase"></h1>
+                <p id="p_dName" class="text-lg font-semibold"></p>
+                <p id="p_dQual" class="text-sm text-gray-700"></p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm font-bold">OPD Prescription</p>
+                <p id="p_date" class="text-sm text-gray-600"></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 border-b border-gray-300 pb-3 mb-4 text-sm">
+            <p><strong>Patient:</strong> <span id="p_pName"></span></p>
+            <p><strong>Phone:</strong> <span id="p_pPhone"></span></p>
+            <p><strong>Vitals:</strong> <span id="p_vitals"></span></p>
+            <p><strong>Diagnosis:</strong> <span id="p_diag"></span></p>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-base font-bold border-b border-gray-400 mb-2">Rx / Prescribed Medications</h3>
+            <pre id="p_meds" class="font-mono text-sm whitespace-pre-wrap"></pre>
+        </div>
+
+        <div id="p_gujContainer" class="mb-6 hidden">
+            <h3 class="text-base font-bold border-b border-gray-400 mb-2">દર્દી માટે દવા લેવાની રીત (Gujarati Instructions)</h3>
+            <p id="p_medsGuj" class="text-sm"></p>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-gray-300 flex justify-between items-end text-xs text-gray-600">
+            <div>
+                <p id="p_followup"></p>
+            </div>
+            <div class="text-right">
+                <p class="font-bold">Doctor's Signature</p>
+                <p class="mt-8">______________________</p>
+            </div>
+        </div>
     </div>
 
 <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
 
-    // Speech Recognition Setup
+    // Speech Recognition
     let recognition;
     let isRecording = false;
     const micBtn = document.getElementById("micBtn");
@@ -171,9 +240,6 @@
             }
             rawDictation.value = transcript;
         };
-    } else {
-        micBtn.disabled = true;
-        micBtn.innerText = "Speech Recognition Not Supported";
     }
 
     // AI Auto-Extract
@@ -182,7 +248,7 @@
         if (!text) return alert("Please dictate or type text first!");
 
         const aiBtn = document.getElementById("aiBtn");
-        aiBtn.innerHTML = "<span>⏳ Extracting Clinical Notes...</span>";
+        aiBtn.innerHTML = "<span>⏳ Processing AI & Gujarati Rx...</span>";
         aiBtn.disabled = true;
 
         try {
@@ -198,14 +264,13 @@
                 if (data.diagnosis) document.getElementById("diagnosis").value = data.diagnosis;
                 if (data.soap_note) document.getElementById("soap_note").value = data.soap_note;
                 if (data.medications) document.getElementById("medications").value = data.medications;
+                if (data.medications_gujarati) document.getElementById("medications_gujarati").value = data.medications_gujarati;
                 if (data.followup_date) document.getElementById("followup_date").value = data.followup_date;
-            } else {
-                alert("AI Processing Error: " + (data.detail || "Failed to parse text"));
             }
         } catch (err) {
             alert("Connection Error: " + err.message);
         } finally {
-            aiBtn.innerHTML = "<span>✨ AI Process & Auto-Fill</span>";
+            aiBtn.innerHTML = "<span>✨ AI Process & Extract (Gujarati Rx Auto-Translate)</span>";
             aiBtn.disabled = false;
         }
     });
@@ -216,18 +281,22 @@
         const btn = document.getElementById("saveBtn");
         const status = document.getElementById("status");
         
-        btn.innerHTML = "<span>⏳ Transmitting to Cloud...</span>";
+        btn.innerText = "⏳ Transmitting...";
         btn.disabled = true;
         status.classList.add("hidden");
 
         const payload = {
             doctor_id: document.getElementById("doctor_id").value,
+            doctor_name: document.getElementById("doctor_name").value,
+            doctor_qualification: document.getElementById("doctor_qualification").value,
+            hospital_name: document.getElementById("hospital_name").value,
             patient_name: document.getElementById("patient_name").value,
             patient_phone: document.getElementById("patient_phone").value,
             vitals: document.getElementById("vitals").value,
             diagnosis: document.getElementById("diagnosis").value,
             soap_note: document.getElementById("soap_note").value,
             medications: document.getElementById("medications").value,
+            medications_gujarati: document.getElementById("medications_gujarati").value,
             followup_date: document.getElementById("followup_date").value
         };
 
@@ -241,11 +310,8 @@
 
             if (res.ok) {
                 status.className = "p-4 rounded-xl border text-sm font-medium bg-emerald-500/10 border-emerald-500/30 text-emerald-400";
-                status.innerText = "✅ Successfully Saved to Supabase EMR! (Record ID: " + data.data[0].id + ")";
+                status.innerText = "✅ Saved to Cloud EMR! (Record ID: " + data.data[0].id + ")";
                 status.classList.remove("hidden");
-                document.getElementById("emrForm").reset();
-                rawDictation.value = "";
-                document.getElementById("doctor_id").value = payload.doctor_id;
             } else {
                 status.className = "p-4 rounded-xl border text-sm font-medium bg-red-500/10 border-red-500/30 text-red-400";
                 status.innerText = "❌ Database Error: " + (data.detail || "Failed to commit record");
@@ -256,12 +322,42 @@
             status.innerText = "❌ Network Error: " + err.message;
             status.classList.remove("hidden");
         } finally {
-            btn.innerHTML = "<span>💾 Commit Record to Supabase EMR</span>";
+            btn.innerText = "💾 Commit to Cloud EMR";
             btn.disabled = false;
         }
     });
-</script>
 
-</body>
-    </html>
-    
+    // Share Rx on WhatsApp
+    document.getElementById("waBtn").addEventListener("click", () => {
+        const dName = document.getElementById("doctor_name").value;
+        const dQual = document.getElementById("doctor_qualification").value;
+        const hName = document.getElementById("hospital_name").value;
+        const pName = document.getElementById("patient_name").value;
+        const pPhone = document.getElementById("patient_phone").value;
+        const diagnosis = document.getElementById("diagnosis").value;
+        const meds = document.getElementById("medications").value;
+        const medsGuj = document.getElementById("medications_gujarati").value;
+        const followup = document.getElementById("followup_date").value;
+
+        if (!pPhone) return alert("Please enter patient phone number!");
+
+        const message = `🏥 *${hName}*\n` +
+            `👨‍⚕️ *${dName}* (${dQual})\n` +
+            `-----------------------------------\n` +
+            `👤 *Patient:* ${pName}\n` +
+            `🩺 *Diagnosis:* ${diagnosis}\n\n` +
+            `💊 *Prescribed Medications (English):*\n${meds}\n\n` +
+            (medsGuj ? `📌 *દવા લેવાની રીત (Gujarati):*\n${medsGuj}\n\n` : '') +
+            (followup ? `📅 *Follow-up Date:* ${followup}\n` : '') +
+            `-----------------------------------\n` +
+            `_Generated via DocScribe EMR Pro_`;
+
+        const waUrl = `https://wa.me/91${pPhone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+    });
+
+    // Print Prescription Layout
+    document.getElementById("printBtn").addEventListener("click", () => {
+        document.getElementById("p_hName").innerText = document.getElementById("hospital_name").value;
+        document.getElementById("p_dName").innerText = document.getElementById("doctor_name").value;
+        document.getElementById("p_dQual").innerText = document.getElementById("doctor_qualification").va
