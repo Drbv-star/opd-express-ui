@@ -10,7 +10,7 @@
         .gradio-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .gradio-header { background: #1a233a; color: #ffffff; border-radius: 10px 10px 0 0; }
         .gradio-section-header { background: #e2e8f0; color: #334155; font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 6px; }
-        .tab-btn { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+        .tab-btn { padding: 8px 14px; font-size: 12px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
         .tab-btn.active { border-bottom: 2px solid #2563eb; color: #2563eb; }
         .badge-purple { background-color: #ede9fe; color: #6d28d9; font-weight: 600; font-size: 11px; padding: 2px 8px; border-radius: 4px; }
         
@@ -24,13 +24,12 @@
 </head>
 <body class="p-2 sm:p-4 max-w-4xl mx-auto space-y-4">
 
-    <!-- LOGIN MODAL -->
     <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
         <div class="gradio-card max-w-md w-full p-6 space-y-4">
             <div class="text-center space-y-1">
                 <div class="text-3xl">🩺</div>
                 <h2 id="authTitle" class="text-xl font-bold text-slate-800">OPD Express AI — Doctor Login</h2>
-                <p class="text-xs text-slate-500">Access your private patient records & EMR portal</p>
+                <p class="text-xs text-slate-500">Access private EMR portal & clinical tools</p>
             </div>
 
             <div class="space-y-3">
@@ -54,16 +53,14 @@
             </div>
         </div>
     </div>
-        <!-- MAIN APP WRAPPER -->
-    <div id="mainApp" class="space-y-4 hidden no-print">
+        <div id="mainApp" class="space-y-4 hidden no-print">
 
-        <!-- Header Banner -->
         <div class="gradio-header p-4 shadow-md flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center space-x-3">
                 <div class="text-2xl">🩺</div>
                 <div>
                     <h1 class="text-lg font-bold">OPD Express AI</h1>
-                    <p class="text-xs text-slate-300">AI-Powered GP OPD Practice Suite</p>
+                    <p class="text-xs text-slate-300">AI Clinical Documentation Suite</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3 bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700">
@@ -72,19 +69,20 @@
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="gradio-card p-1 flex space-x-4 border-b border-slate-200">
+        <div class="gradio-card p-1 flex space-x-2 border-b border-slate-200 overflow-x-auto">
             <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
-            <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records & Search</button>
-            <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Practice Analytics</button>
+            <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records</button>
+            <button id="navTab3" type="button" onclick="switchTab('tab3')" class="tab-btn text-slate-500">📈 Analytics</button>
+            <button id="navTab4" type="button" onclick="switchTab('tab4')" class="tab-btn text-slate-500">📰 Medical Updates</button>
+            <button id="navTab5" type="button" onclick="switchTab('tab5')" class="tab-btn text-slate-500">💬 Lounge</button>
         </div>
 
-        <!-- TAB 1: NEW CONSULTATION -->
         <div id="tab1" class="space-y-4">
+            
             <div class="gradio-card p-4 space-y-3">
                 <div class="flex items-center space-x-2">
-                    <span class="text-base">👤</span>
-                    <span class="font-bold text-sm text-slate-800">Patient Details & Vital Signs</span>
+                    <span class="text-base">🏥</span>
+                    <span class="font-bold text-sm text-slate-800">Doctor & Clinic Profile Header</span>
                 </div>
 
                 <input type="hidden" id="doctor_id" value="">
@@ -103,15 +101,26 @@
                         <input type="text" id="doctor_reg_no" placeholder="e.g. GMC-12345" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
                     </div>
                     <div>
-                        <span class="badge-purple">Clinic / Hospital</span>
+                        <span class="badge-purple">Clinic / Hospital Name</span>
                         <input type="text" id="hospital_name" value="Primary Health Center" class="w-full mt-1 p-1.5 text-xs border border-slate-300 rounded-md">
                     </div>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div class="gradio-card p-4 space-y-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-base">👤</span>
+                    <span class="font-bold text-sm text-slate-800">Patient Details & Vital Signs</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
                     <div>
                         <span class="badge-purple">Patient Name</span>
                         <input type="text" id="patient_name" placeholder="e.g. Rahul Sharma" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
+                    </div>
+                    <div>
+                        <span class="badge-purple">Age</span>
+                        <input type="text" id="patient_age" placeholder="e.g. 32 Y / 5 M" class="w-full mt-1 p-2 text-sm border border-slate-300 rounded-md">
                     </div>
                     <div>
                         <span class="badge-purple">Sex</span>
@@ -157,10 +166,9 @@
                 </div>
             </div>
 
-            <!-- Voice Scribe -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header flex justify-between items-center">
-                    <span>🎙️ OPD Express AI Voice Scribe (Cross-Browser Audio Upload)</span>
+                    <span>🎙️ Voice Scribe (Live Transcript + Audio Processing)</span>
                     <span id="recordingStatus" class="hidden text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold animate-pulse">● Recording Mic</span>
                 </div>
 
@@ -174,53 +182,32 @@
                 </div>
 
                 <div>
-                    <span class="badge-purple">Raw Clinical Notes (Type or Dictate)</span>
+                    <span class="badge-purple">Raw Clinical Notes (Live Speech Transcript Stream)</span>
                     <textarea id="rawDictation" rows="3" placeholder="Dictate symptoms in Gujarati, Hindi, or English..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
                 </div>
             </div>
 
-            <!-- Prescription Builder -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
 
                 <div>
-                    <span class="badge-purple">⭐ Expanded OPD Drug Catalog</span>
+                    <span class="badge-purple">⭐ Drug Master Catalog</span>
                     <select id="drugCatalog" onchange="applyDrugCatalog()" class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md bg-white">
                         <option value="">-- Select Drug from Catalog --</option>
                         <optgroup label="Analgesics & Antipyretics">
                             <option value="Tab Paracetamol 650mg | 1 Tab PO | BD | 3 days">Tab Paracetamol 650mg (BD x 3 days)</option>
                             <option value="Tab Aceclofenac 100mg + Paracetamol 325mg | 1 Tab PO | BD | 3 days">Tab Aceclofenac + Paracetamol (BD x 3 days)</option>
-                            <option value="Tab Diclofenac 50mg | 1 Tab PO | BD | 3 days">Tab Diclofenac 50mg (BD x 3 days)</option>
-                            <option value="Tab Ibuprofen 400mg | 1 Tab PO | TDS | 3 days">Tab Ibuprofen 400mg (TDS x 3 days)</option>
                         </optgroup>
                         <optgroup label="Gastrointestinal & Antacids">
                             <option value="Tab Pantoprazole 40mg | 1 Tab PO | OD | 5 days">Tab Pantoprazole 40mg (OD AC x 5 days)</option>
                             <option value="Cap Rabeprazole 20mg + Domperidone 30mg | 1 Cap PO | OD | 7 days">Cap Rabeprazole + Domperidone (OD AC x 7 days)</option>
-                            <option value="Tab Ondansetron 4mg | 1 Tab PO | TDS | 3 days">Tab Ondansetron 4mg (TDS x 3 days)</option>
-                            <option value="Tab Meftal-Spas | 1 Tab PO | BD | 3 days">Tab Meftal-Spas (BD x 3 days)</option>
                         </optgroup>
                         <optgroup label="Antimicrobials & Antibiotics">
                             <option value="Cap Amoxicillin 500mg | 1 Cap PO | TDS | 5 days">Cap Amoxicillin 500mg (TDS x 5 days)</option>
                             <option value="Tab Augmentin 625mg | 1 Tab PO | BD | 5 days">Tab Augmentin 625mg (BD x 5 days)</option>
-                            <option value="Tab Azithromycin 500mg | 1 Tab PO | OD | 3 days">Tab Azithromycin 500mg (OD x 3 days)</option>
-                            <option value="Tab Cefixime 200mg | 1 Tab PO | BD | 5 days">Tab Cefixime 200mg (BD x 5 days)</option>
-                        </optgroup>
-                        <optgroup label="Respiratory, Cold & Allergy">
-                            <option value="Tab Cetirizine 10mg | 1 Tab PO | HS | 5 days">Tab Cetirizine 10mg (HS x 5 days)</option>
-                            <option value="Tab Levocetirizine + Montelukast | 1 Tab PO | HS | 7 days">Tab Levocet + Montelukast (HS x 7 days)</option>
-                            <option value="Syr Ascoril LS | 1 TSF PO | TDS | 5 days">Syr Ascoril LS 5ml (TDS x 5 days)</option>
-                        </optgroup>
-                        <optgroup label="Cardiovascular & Anti-Hypertensives">
-                            <option value="Tab Amlodipine 5mg | 1 Tab PO | OD | 30 days">Tab Amlodipine 5mg (OD x 30 days)</option>
-                            <option value="Tab Telmisartan 40mg | 1 Tab PO | OD | 30 days">Tab Telmisartan 40mg (OD x 30 days)</option>
-                        </optgroup>
-                        <optgroup label="Anti-Diabetics & Metabolic">
-                            <option value="Tab Metformin 500mg | 1 Tab PO | BD | 30 days">Tab Metformin 500mg (BD x 30 days)</option>
-                            <option value="Tab Glimepiride 1mg + Metformin 500mg | 1 Tab PO | OD | 30 days">Tab Glimepiride + Metformin (OD x 30 days)</option>
                         </optgroup>
                         <optgroup id="customMedicinesGroup" label="⭐ My Custom Saved Drugs">
-                            <!-- Dynamically loaded from cloud database -->
-                        </optgroup>
+                            </optgroup>
                     </select>
                 </div>
 
@@ -239,7 +226,6 @@
                             <option value="BD">BD</option>
                             <option value="OD">OD</option>
                             <option value="TDS">TDS</option>
-                            <option value="QID">QID</option>
                             <option value="STAT">STAT</option>
                             <option value="HS">HS</option>
                             <option value="SOS">SOS</option>
@@ -257,7 +243,7 @@
                         ➕ Add Drug to Prescription
                     </button>
                     <button type="button" onclick="saveCustomDrugToCloud()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs py-2 rounded-md shadow-sm">
-                        💾 Save Drug to My Cloud Master
+                        💾 Save Drug to Cloud Master
                     </button>
                 </div>
 
@@ -265,9 +251,8 @@
                     <span class="badge-purple">📄 Active Prescription List</span>
                     <textarea id="medications" rows="3" placeholder="Prescribed drugs will accumulate here..." class="w-full mt-1 p-2 text-xs font-mono border border-slate-300 rounded-md bg-slate-50"></textarea>
                 </div>
-                            </div>
-                                        <!-- Review & Save -->
-            <div class="gradio-card p-4 space-y-3">
+                </div>
+                                                                      <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">📅 Review, Save & Print</div>
 
                 <div class="flex flex-wrap items-center gap-2">
@@ -279,7 +264,6 @@
                         <button type="button" onclick="setFollowup(3)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md">3 Days</button>
                         <button type="button" onclick="setFollowup(5)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md">5 Days</button>
                         <button type="button" onclick="setFollowup(7)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md">1 Week</button>
-                        <button type="button" onclick="setFollowup(14)" class="bg-slate-100 hover:bg-slate-200 border text-xs px-2.5 py-1.5 rounded-md">2 Weeks</button>
                     </div>
                 </div>
 
@@ -307,7 +291,6 @@
             </div>
         </div>
 
-        <!-- TAB 2: PATIENT SEARCH -->
         <div id="tab2" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
@@ -318,15 +301,14 @@
                 </div>
 
                 <div id="searchResults" class="space-y-2 pt-2">
-                    <p class="text-xs text-slate-500 italic">Enter patient name or mobile number above to fetch historical consultations.</p>
+                    <p class="text-xs text-slate-500 italic">Enter patient name or mobile number above to fetch records.</p>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: ANALYTICS -->
         <div id="tab3" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-4">
-                <div class="gradio-section-header">📊 Practice Case Analysis (OPD Express AI Cloud)</div>
+                <div class="gradio-section-header">📊 Practice Case Analysis</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-center">
                         <span class="text-xs text-blue-600 font-bold block">TOTAL CONSULTATIONS</span>
@@ -341,15 +323,45 @@
                 <div class="border border-slate-200 p-3 rounded-lg bg-slate-50 text-xs text-slate-600">
                     <span class="font-bold text-slate-800 block mb-1">Diagnostic Breakdown:</span>
                     <div id="stat_breakdown" class="space-y-1">
-                        <p class="text-slate-400 italic">No records committed yet for this doctor account.</p>
+                        <p class="text-slate-400 italic">No records committed yet.</p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab4" class="space-y-4 hidden">
+            <div class="gradio-card p-4 space-y-3">
+                <div class="gradio-section-header flex justify-between items-center">
+                    <span>📰 Daily Medical Science & Clinical Updates</span>
+                    <button type="button" onclick="loadMedicalNews()" class="text-xs bg-slate-200 px-2 py-0.5 rounded hover:bg-slate-300">Refresh Feed</button>
+                </div>
+                <div id="newsContainer" class="space-y-3 pt-1">
+                    <p class="text-xs text-slate-500 italic">Loading latest medical news feed...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab5" class="space-y-4 hidden">
+            <div class="gradio-card p-4 space-y-4">
+                <div class="gradio-section-header">💬 Doctors' Lounge — Peer Consultation Forum</div>
+
+                <div class="border border-slate-200 rounded-lg p-3 bg-slate-50 space-y-2">
+                    <span class="font-bold text-xs text-slate-800">Share Clinical Case or Ask Peers</span>
+                    <input type="text" id="forum_title" placeholder="Case Title (e.g., Persistent Dry Cough in 45M)" class="w-full p-2 text-xs border border-slate-300 rounded-md">
+                    <textarea id="forum_content" rows="3" placeholder="Describe symptoms, vitals, or clinical scenario (Do not include patient identifiers)..." class="w-full p-2 text-xs border border-slate-300 rounded-md"></textarea>
+                    <button type="button" onclick="postForumCase()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs py-2 px-4 rounded-md">
+                        Post Case to Lounge
+                    </button>
+                </div>
+
+                <div id="forumPostsContainer" class="space-y-3">
+                    <p class="text-xs text-slate-500 italic">Loading lounge posts...</p>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- PRINTABLE PRESCRIPTION CONTAINER -->
     <div id="printSection" class="print-only text-black p-6">
         <div class="border-b-2 border-slate-900 pb-3 mb-4 flex justify-between items-start">
             <div>
@@ -365,9 +377,10 @@
 
         <div class="grid grid-cols-2 gap-2 border-b border-slate-300 pb-3 mb-4 text-xs">
             <p><strong>Patient Name:</strong> <span id="pr_pName"></span></p>
+            <p><strong>Age / Sex:</strong> <span id="pr_pAgeSex"></span></p>
             <p><strong>Mobile:</strong> <span id="pr_pPhone"></span></p>
             <p><strong>Vitals:</strong> <span id="pr_vitals"></span></p>
-            <p><strong>Diagnosis:</strong> <span id="pr_diag"></span></p>
+            <p class="col-span-2"><strong>Diagnosis:</strong> <span id="pr_diag"></span></p>
         </div>
 
         <div class="mb-6 space-y-1">
@@ -385,15 +398,15 @@
             </div>
         </div>
                         </div>
-    <script>
+                        <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
     let isSignupMode = false;
     let mediaRecorder = null;
     let audioChunks = [];
     let isAudioRecording = false;
     let recordedAudioBlob = null;
+    let speechRecognizer = null;
 
-    // Authentication
     function toggleAuthMode() {
         isSignupMode = !isSignupMode;
         document.getElementById("authTitle").innerText = isSignupMode ? "Register Doctor Profile" : "OPD Express AI — Doctor Login";
@@ -405,8 +418,8 @@
         const email = document.getElementById("authEmail").value.trim();
         const password = document.getElementById("authPassword").value.trim();
 
-        if (!email || !password) return alert("Please enter both email and password.");
-        if (password.length < 6) return alert("Password must be at least 6 characters long.");
+        if (!email || !password) return alert("Enter both email and password.");
+        if (password.length < 6) return alert("Password must be at least 6 characters.");
 
         const endpoint = isSignupMode ? "/api/v1/auth/signup" : "/api/v1/auth/login";
         
@@ -420,7 +433,7 @@
 
             if (res.ok) {
                 if (isSignupMode) {
-                    alert("Account registered successfully! You can now log in.");
+                    alert("Account registered successfully! Please sign in.");
                     toggleAuthMode();
                 } else {
                     localStorage.setItem("docscribe_token", data.access_token);
@@ -460,12 +473,12 @@
     window.onload = initSession;
 
     function switchTab(tabId) {
-        ['tab1', 'tab2', 'tab3'].forEach(t => {
+        ['tab1', 'tab2', 'tab3', 'tab4', 'tab5'].forEach(t => {
             const el = document.getElementById(t);
             if (el) el.classList.add('hidden');
         });
         
-        ['navTab1', 'navTab2', 'navTab3'].forEach(n => {
+        ['navTab1', 'navTab2', 'navTab3', 'navTab4', 'navTab5'].forEach(n => {
             const navEl = document.getElementById(n);
             if (navEl) {
                 navEl.classList.remove('active');
@@ -476,14 +489,220 @@
         const target = document.getElementById(tabId);
         if (target) target.classList.remove('hidden');
 
-        const activeNav = tabId === 'tab1' ? 'navTab1' : tabId === 'tab2' ? 'navTab2' : 'navTab3';
-        const activeNavEl = document.getElementById(activeNav);
+        const navMap = { tab1: 'navTab1', tab2: 'navTab2', tab3: 'navTab3', tab4: 'navTab4', tab5: 'navTab5' };
+        const activeNavEl = document.getElementById(navMap[tabId]);
         if (activeNavEl) {
             activeNavEl.classList.add('active');
             activeNavEl.classList.remove('text-slate-500');
         }
 
         if (tabId === 'tab3') loadAnalytics();
+        if (tabId === 'tab4') loadMedicalNews();
+        if (tabId === 'tab5') loadForumPosts();
+    }
+
+    // Audio Dictation & Live Speech Recognition Stream
+    async function toggleMic() {
+        const micBtn = document.getElementById("micBtn");
+        const status = document.getElementById("recordingStatus");
+        const rawBox = document.getElementById("rawDictation");
+
+        if (!isAudioRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                let mimeType = 'audio/webm';
+                if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                    if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
+                    else mimeType = '';
+                }
+
+                mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    recordedAudioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+                };
+
+                mediaRecorder.start(500);
+
+                // Start Live Speech Recognition Stream
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    speechRecognizer = new SpeechRecognition();
+                    speechRecognizer.continuous = true;
+                    speechRecognizer.interimResults = true;
+                    speechRecognizer.lang = 'en-IN';
+
+                    speechRecognizer.onresult = (event) => {
+                        let transcript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            transcript += event.results[i][0].transcript;
+                        }
+                        rawBox.value = transcript;
+                    };
+                    speechRecognizer.start();
+                }
+
+                isAudioRecording = true;
+                micBtn.innerText = "⏹️ Stop Audio Dictation";
+                micBtn.className = "bg-red-600 hover:bg-red-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
+                status.classList.remove("hidden");
+            } catch (err) {
+                alert("Microphone Error: Allow permissions in browser settings.");
+            }
+        } else {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            if (speechRecognizer) {
+                speechRecognizer.stop();
+            }
+            isAudioRecording = false;
+            micBtn.innerText = "🎙️ Start Audio Dictation";
+            micBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
+            status.classList.add("hidden");
+        }
+    }
+
+    async function runAIExtract() {
+        const btn = document.getElementById("aiExtractBtn");
+        btn.innerText = "⏳ Extracting via Gemini...";
+        btn.disabled = true;
+
+        try {
+            let res, data;
+
+            if (recordedAudioBlob) {
+                const formData = new FormData();
+                formData.append("file", recordedAudioBlob, "dictation.webm");
+
+                res = await fetch(`${API_BASE}/api/v1/ai/process-audio`, {
+                    method: "POST",
+                    body: formData
+                });
+                data = await res.json();
+                recordedAudioBlob = null;
+            } else {
+                const text = document.getElementById("rawDictation").value.trim();
+                if (!text) {
+                    btn.innerText = "✨ AI Extract & Auto-Fill";
+                    btn.disabled = false;
+                    return alert("Record audio or type clinical notes first!");
+                }
+
+                res = await fetch(`${API_BASE}/api/v1/ai/process-dictation`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ raw_text: text })
+                });
+                data = await res.json();
+            }
+
+            if (res.ok) {
+                if (data.patient_name) document.getElementById("patient_name").value = data.patient_name;
+                if (data.patient_age) document.getElementById("patient_age").value = data.patient_age;
+                if (data.patient_sex) document.getElementById("patient_sex").value = data.patient_sex;
+                if (data.patient_phone) document.getElementById("patient_phone").value = data.patient_phone;
+                
+                // Assign individual vitals
+                if (data.v_bp) document.getElementById("v_bp").value = data.v_bp;
+                if (data.v_pulse) document.getElementById("v_pulse").value = data.v_pulse;
+                if (data.v_spo2) document.getElementById("v_spo2").value = data.v_spo2;
+                if (data.v_temp) document.getElementById("v_temp").value = data.v_temp;
+                if (data.v_rbs) document.getElementById("v_rbs").value = data.v_rbs;
+
+                if (data.diagnosis) document.getElementById("diagnosis").value = data.diagnosis;
+                if (data.soap_note) document.getElementById("soap_note").value = data.soap_note;
+                if (data.medications) document.getElementById("medications").value = data.medications;
+                if (data.followup_date) document.getElementById("followup_date").value = data.followup_date;
+                alert("✨ Extraction Complete!");
+            } else {
+                alert("AI Extraction Failed: " + (data.detail || "Server error"));
+            }
+        } catch (err) {
+            alert("AI Error: " + err.message);
+        } finally {
+            btn.innerText = "✨ AI Extract & Auto-Fill";
+            btn.disabled = false;
+        }
+    }
+
+    async function saveRecord() {
+        const btn = document.getElementById("saveVisitBtn");
+        const banner = document.getElementById("successBanner");
+
+        btn.innerText = "⚡ Saving...";
+        btn.disabled = true;
+
+        const bp = document.getElementById("v_bp").value;
+        const pulse = document.getElementById("v_pulse").value;
+        const vitalsFormatted = `BP: ${bp || 'N/A'}, Pulse: ${pulse || 'N/A'}`;
+
+        const payload = {
+            doctor_id: document.getElementById("doctor_id").value,
+            doctor_name: document.getElementById("doctor_name").value,
+            doctor_qualification: document.getElementById("doctor_qualification").value,
+            doctor_reg_no: document.getElementById("doctor_reg_no").value,
+            hospital_name: document.getElementById("hospital_name").value,
+            patient_name: document.getElementById("patient_name").value,
+            patient_age: document.getElementById("patient_age").value,
+            patient_sex: document.getElementById("patient_sex").value,
+            patient_phone: document.getElementById("patient_phone").value,
+            vitals: vitalsFormatted,
+            diagnosis: document.getElementById("diagnosis").value,
+            soap_note: document.getElementById("soap_note").value,
+            medications: document.getElementById("medications").value,
+            followup_date: document.getElementById("followup_date").value
+        };
+
+        if (!payload.patient_name || !payload.patient_phone) {
+            btn.innerText = "⚡ Save Record to Cloud EMR";
+            btn.disabled = false;
+            return alert("Patient Name and Phone Number are required!");
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/consultations/save`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                banner.classList.remove("hidden");
+                banner.innerText = "✅ Saved Successfully | Patient: " + payload.patient_name;
+
+                // AUTO-CLEAR PATIENT DETAILS & VITALS (PRESERVE DOCTOR HEADER)
+                document.getElementById("patient_name").value = "";
+                document.getElementById("patient_age").value = "";
+                document.getElementById("patient_sex").value = "";
+                document.getElementById("patient_phone").value = "";
+                document.getElementById("v_bp").value = "";
+                document.getElementById("v_pulse").value = "";
+                document.getElementById("v_spo2").value = "";
+                document.getElementById("v_temp").value = "";
+                document.getElementById("v_rbs").value = "";
+                document.getElementById("diagnosis").value = "";
+                document.getElementById("rawDictation").value = "";
+                document.getElementById("soap_note").value = "";
+                document.getElementById("medications").value = "";
+                document.getElementById("followup_date").value = "";
+            } else {
+                alert("Database Error: " + (data.detail || "Failed to commit record"));
+            }
+        } catch (err) {
+            alert("Save Error: " + err.message);
+        } finally {
+            btn.innerText = "⚡ Save Record to Cloud EMR";
+            btn.disabled = false;
+        }
     }
 
     function setFollowup(days) {
@@ -532,7 +751,7 @@
                 body: JSON.stringify({ doctor_id: docId, brand_name, dosage, frequency, duration })
             });
             if (res.ok) {
-                alert("💾 Drug saved to your personal cloud master catalog!");
+                alert("💾 Drug saved to cloud master!");
                 loadCustomMedicines();
             }
         } catch (err) {
@@ -555,161 +774,6 @@
             }
         } catch (err) {
             console.log("Failed to load custom medicines", err);
-        }
-    }
-
-    // Cross-Browser Audio Recorder
-    async function toggleMic() {
-        const micBtn = document.getElementById("micBtn");
-        const status = document.getElementById("recordingStatus");
-
-        if (!isAudioRecording) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                
-                let mimeType = 'audio/webm';
-                if (!MediaRecorder.isTypeSupported('audio/webm')) {
-                    if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
-                    else if (MediaRecorder.isTypeSupported('audio/aac')) mimeType = 'audio/aac';
-                    else mimeType = '';
-                }
-
-                const options = mimeType ? { mimeType } : {};
-                mediaRecorder = new MediaRecorder(stream, options);
-                audioChunks = [];
-
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
-                };
-
-                mediaRecorder.onstop = () => {
-                    recordedAudioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-                };
-
-                mediaRecorder.start(500);
-                isAudioRecording = true;
-                micBtn.innerText = "⏹️ Stop Audio Dictation";
-                micBtn.className = "bg-red-600 hover:bg-red-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
-                status.classList.remove("hidden");
-            } catch (err) {
-                alert("Microphone Error: Allow microphone permissions in browser settings.");
-            }
-        } else {
-            if (mediaRecorder && mediaRecorder.state !== "inactive") {
-                mediaRecorder.stop();
-                mediaRecorder.stream.getTracks().forEach(track => track.stop());
-            }
-            isAudioRecording = false;
-            micBtn.innerText = "🎙️ Start Audio Dictation";
-            micBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs py-2 px-4 rounded-md shadow-sm";
-            status.classList.add("hidden");
-            alert("Audio dictation captured! Now tap '✨ AI Extract & Auto-Fill'.");
-        }
-    }
-
-    async function runAIExtract() {
-        const btn = document.getElementById("aiExtractBtn");
-        btn.innerText = "⏳ Extracting via Gemini...";
-        btn.disabled = true;
-
-        try {
-            let res, data;
-
-            if (recordedAudioBlob) {
-                const formData = new FormData();
-                formData.append("file", recordedAudioBlob, "dictation.webm");
-
-                res = await fetch(`${API_BASE}/api/v1/ai/process-audio`, {
-                    method: "POST",
-                    body: formData
-                });
-                data = await res.json();
-                recordedAudioBlob = null;
-            } else {
-                const text = document.getElementById("rawDictation").value.trim();
-                if (!text) {
-                    btn.innerText = "✨ AI Extract & Auto-Fill";
-                    btn.disabled = false;
-                    return alert("Please record audio or type clinical notes first!");
-                }
-
-                res = await fetch(`${API_BASE}/api/v1/ai/process-dictation`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ raw_text: text })
-                });
-                data = await res.json();
-            }
-
-            if (res.ok) {
-                if (data.patient_name) document.getElementById("patient_name").value = data.patient_name;
-                if (data.patient_sex) document.getElementById("patient_sex").value = data.patient_sex;
-                if (data.patient_phone) document.getElementById("patient_phone").value = data.patient_phone;
-                if (data.vitals) document.getElementById("v_bp").value = data.vitals;
-                if (data.diagnosis) document.getElementById("diagnosis").value = data.diagnosis;
-                if (data.soap_note) document.getElementById("soap_note").value = data.soap_note;
-                if (data.medications) document.getElementById("medications").value = data.medications;
-                if (data.followup_date) document.getElementById("followup_date").value = data.followup_date;
-                alert("✨ OPD Express AI Extraction Complete!");
-            } else {
-                alert("AI Processing Failed: " + (data.detail || "Error connecting to server"));
-            }
-        } catch (err) {
-            alert("AI Error: " + err.message);
-        } finally {
-            btn.innerText = "✨ AI Extract & Auto-Fill";
-            btn.disabled = false;
-        }
-    }
-
-    async function saveRecord() {
-        const btn = document.getElementById("saveVisitBtn");
-        const banner = document.getElementById("successBanner");
-
-        btn.innerText = "⚡ Saving...";
-        btn.disabled = true;
-
-        const payload = {
-            doctor_id: document.getElementById("doctor_id").value,
-            doctor_name: document.getElementById("doctor_name").value,
-            doctor_qualification: document.getElementById("doctor_qualification").value,
-            doctor_reg_no: document.getElementById("doctor_reg_no").value,
-            hospital_name: document.getElementById("hospital_name").value,
-            patient_name: document.getElementById("patient_name").value,
-            patient_sex: document.getElementById("patient_sex").value,
-            patient_phone: document.getElementById("patient_phone").value,
-            vitals: `BP: ${document.getElementById("v_bp").value}, Pulse: ${document.getElementById("v_pulse").value}`,
-            diagnosis: document.getElementById("diagnosis").value,
-            soap_note: document.getElementById("soap_note").value,
-            medications: document.getElementById("medications").value,
-            followup_date: document.getElementById("followup_date").value
-        };
-
-        if (!payload.patient_name || !payload.patient_phone) {
-            btn.innerText = "⚡ Save Record to Cloud EMR";
-            btn.disabled = false;
-            return alert("Patient Name and Phone Number are required!");
-        }
-
-        try {
-            const res = await fetch(`${API_BASE}/api/v1/consultations/save`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-
-            if (res.ok) {
-                banner.classList.remove("hidden");
-                banner.innerText = "✅ Consultation Saved Successfully | Patient: " + payload.patient_name;
-            } else {
-                alert("Database Error: " + (data.detail || "Failed to commit record"));
-            }
-        } catch (err) {
-            alert("Save Error: " + err.message);
-        } finally {
-            btn.innerText = "⚡ Save Record to Cloud EMR";
-            btn.disabled = false;
         }
     }
 
@@ -736,8 +800,10 @@
         document.getElementById("pr_date").innerText = new Date().toLocaleDateString('en-IN');
         
         const pName = document.getElementById("patient_name").value;
+        const pAge = document.getElementById("patient_age").value;
         const pSex = document.getElementById("patient_sex").value;
-        document.getElementById("pr_pName").innerText = `${pName} ${pSex ? '(' + pSex + ')' : ''}`;
+        document.getElementById("pr_pName").innerText = pName;
+        document.getElementById("pr_pAgeSex").innerText = `${pAge || 'N/A'} / ${pSex || 'N/A'}`;
         
         document.getElementById("pr_pPhone").innerText = document.getElementById("patient_phone").value;
         document.getElementById("pr_vitals").innerText = `BP: ${document.getElementById("v_bp").value}, Pulse: ${document.getElementById("v_pulse").value}`;
@@ -755,8 +821,8 @@
         const docId = document.getElementById("doctor_id").value;
         const container = document.getElementById("searchResults");
 
-        if (!q) return alert("Enter patient name or phone number!");
-        container.innerHTML = "<p class='text-xs text-slate-500'>Searching cloud database...</p>";
+        if (!q) return alert("Enter patient name or phone!");
+        container.innerHTML = "<p class='text-xs text-slate-500'>Searching records...</p>";
 
         try {
             const res = await fetch(`${API_BASE}/api/v1/consultations/search?doctor_id=${docId}&query=${encodeURIComponent(q)}`);
@@ -766,51 +832,21 @@
                 container.innerHTML = data.data.map(item => `
                     <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 space-y-1">
                         <div class="flex justify-between font-bold text-xs text-slate-800">
-                            <span>👤 ${item.patient_name} ${item.patient_sex ? '(' + item.patient_sex + ')' : ''} - ${item.patient_phone}</span>
-                            <span class="text-slate-500">${new Date(item.created_at).toLocaleDateString()}</span>
+                            <span>👤 ${p.doctor_name || 'Verified Doctor'}</span>
+                            <span>${new Date(p.created_at).toLocaleDateString()}</span>
                         </div>
-                        <p class="text-xs text-slate-600"><strong>Diagnosis:</strong> ${item.diagnosis || 'N/A'}</p>
-                        <p class="text-xs text-slate-600"><strong>Vitals:</strong> ${item.vitals || 'N/A'}</p>
-                        <p class="text-xs font-mono text-slate-700"><strong>Rx:</strong> ${item.medications || 'N/A'}</p>
+                        <h4 class="font-bold text-xs text-slate-800">${p.title}</h4>
+                        <p class="text-xs text-slate-600 whitespace-pre-wrap">${p.content}</p>
                     </div>
                 `).join('');
             } else {
-                container.innerHTML = "<p class='text-xs text-red-500'>No patient records found matching query.</p>";
+                container.innerHTML = "<p class='text-xs text-slate-400 italic'>No cases posted in the lounge yet. Be the first to start a clinical discussion!</p>";
             }
         } catch (err) {
-            container.innerHTML = "<p class='text-xs text-red-500'>Search failed: " + err.message + "</p>";
-        }
-    }
-
-    async function loadAnalytics() {
-        const docId = document.getElementById("doctor_id").value;
-        try {
-            const res = await fetch(`${API_BASE}/api/v1/analytics/summary?doctor_id=${docId}`);
-            const data = await res.json();
-
-            if (res.ok) {
-                document.getElementById("stat_total").innerText = data.total_consultations;
-                document.getElementById("stat_top").innerText = data.top_diagnosis;
-
-                const breakdown = data.breakdown;
-                const container = document.getElementById("stat_breakdown");
-                if (Object.keys(breakdown).length === 0) {
-                    container.innerHTML = "<p class='text-slate-400 italic'>No records committed yet for this doctor account.</p>";
-                } else {
-                    container.innerHTML = Object.entries(breakdown).map(([diag, count]) => `
-                        <div class="flex justify-between border-b border-slate-200 pb-1">
-                            <span>${diag}</span>
-                            <span class="font-bold text-indigo-600">${count} visit(s)</span>
-                        </div>
-                    `).join('');
-                }
-            }
-        } catch (err) {
-            console.log("Analytics Load Error:", err);
+            container.innerHTML = "<p class='text-xs text-red-500'>Failed to load lounge posts.</p>";
         }
     }
 </script>
 
 </body>
-    </html>
-    
+</html>
