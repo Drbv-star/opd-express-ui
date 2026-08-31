@@ -24,6 +24,7 @@
 </head>
 <body class="p-2 sm:p-4 max-w-4xl mx-auto space-y-4">
 
+    <!-- LOGIN MODAL -->
     <div id="authModal" class="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 no-print">
         <div class="gradio-card max-w-md w-full p-6 space-y-4">
             <div class="text-center space-y-1">
@@ -53,8 +54,10 @@
             </div>
         </div>
     </div>
-        <div id="mainApp" class="space-y-4 hidden no-print">
+        <!-- MAIN APP WRAPPER -->
+    <div id="mainApp" class="space-y-4 hidden no-print">
 
+        <!-- Header Banner -->
         <div class="gradio-header p-4 shadow-md flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center space-x-3">
                 <div class="text-2xl">🩺</div>
@@ -69,6 +72,7 @@
             </div>
         </div>
 
+        <!-- Navigation Tabs -->
         <div class="gradio-card p-1 flex space-x-2 border-b border-slate-200 overflow-x-auto">
             <button id="navTab1" type="button" onclick="switchTab('tab1')" class="tab-btn active">🩺 New Consultation</button>
             <button id="navTab2" type="button" onclick="switchTab('tab2')" class="tab-btn text-slate-500">📋 Patient Records</button>
@@ -77,8 +81,10 @@
             <button id="navTab5" type="button" onclick="switchTab('tab5')" class="tab-btn text-slate-500">💬 Lounge</button>
         </div>
 
+        <!-- TAB 1: NEW CONSULTATION -->
         <div id="tab1" class="space-y-4">
             
+            <!-- SECTION 1: DOCTOR & CLINIC PROFILE -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="flex items-center space-x-2">
                     <span class="text-base">🏥</span>
@@ -107,6 +113,7 @@
                 </div>
             </div>
 
+            <!-- SECTION 2: PATIENT DETAILS & INDIVIDUAL VITALS -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="flex items-center space-x-2">
                     <span class="text-base">👤</span>
@@ -137,6 +144,7 @@
                     </div>
                 </div>
 
+                <!-- DEDICATED INDIVIDUAL VITAL FIELDS -->
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
                     <div>
                         <span class="badge-purple">BP (mmHg)</span>
@@ -166,9 +174,10 @@
                 </div>
             </div>
 
+            <!-- Voice Scribe -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header flex justify-between items-center">
-                    <span>🎙️ Voice Scribe (Live Transcript + Audio Processing)</span>
+                    <span>🎙️ Voice Scribe (Audio Dictation & Live Streaming)</span>
                     <span id="recordingStatus" class="hidden text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold animate-pulse">● Recording Mic</span>
                 </div>
 
@@ -182,11 +191,12 @@
                 </div>
 
                 <div>
-                    <span class="badge-purple">Raw Clinical Notes (Live Speech Transcript Stream)</span>
+                    <span class="badge-purple">Raw Clinical Notes</span>
                     <textarea id="rawDictation" rows="3" placeholder="Dictate symptoms in Gujarati, Hindi, or English..." class="w-full mt-1 p-2 text-xs border border-slate-300 rounded-md focus:outline-none"></textarea>
                 </div>
             </div>
 
+            <!-- Prescription Builder -->
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">💊 Prescription (Rx) Builder</div>
 
@@ -202,12 +212,9 @@
                             <option value="Tab Pantoprazole 40mg | 1 Tab PO | OD | 5 days">Tab Pantoprazole 40mg (OD AC x 5 days)</option>
                             <option value="Cap Rabeprazole 20mg + Domperidone 30mg | 1 Cap PO | OD | 7 days">Cap Rabeprazole + Domperidone (OD AC x 7 days)</option>
                         </optgroup>
-                        <optgroup label="Antimicrobials & Antibiotics">
-                            <option value="Cap Amoxicillin 500mg | 1 Cap PO | TDS | 5 days">Cap Amoxicillin 500mg (TDS x 5 days)</option>
-                            <option value="Tab Augmentin 625mg | 1 Tab PO | BD | 5 days">Tab Augmentin 625mg (BD x 5 days)</option>
-                        </optgroup>
                         <optgroup id="customMedicinesGroup" label="⭐ My Custom Saved Drugs">
-                            </optgroup>
+                            <!-- Dynamically loaded -->
+                        </optgroup>
                     </select>
                 </div>
 
@@ -251,8 +258,10 @@
                     <span class="badge-purple">📄 Active Prescription List</span>
                     <textarea id="medications" rows="3" placeholder="Prescribed drugs will accumulate here..." class="w-full mt-1 p-2 text-xs font-mono border border-slate-300 rounded-md bg-slate-50"></textarea>
                 </div>
-                </div>
-                                                                      <div class="gradio-card p-4 space-y-3">
+            </div>
+
+            <!-- Save & Review -->
+            <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">📅 Review, Save & Print</div>
 
                 <div class="flex flex-wrap items-center gap-2">
@@ -286,11 +295,12 @@
 
                 <div class="border border-slate-200 rounded-md p-3 bg-slate-50 space-y-2">
                     <span class="font-bold text-xs text-slate-700">SOAP Note Output</span>
-                    <textarea id="soap_note" rows="4" class="w-full p-2 text-xs border border-slate-300 rounded-md bg-white" placeholder="Generated SOAP structure will display here..."></textarea>
+                    <textarea id="soap_note" rows="4" class="w-full p-2 text-xs border border-slate-300 rounded-md bg-white" placeholder="Generated SOAP structure..."></textarea>
                 </div>
             </div>
         </div>
 
+        <!-- TAB 2: PATIENT SEARCH -->
         <div id="tab2" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header">🔍 Search Patient Visit Records</div>
@@ -306,6 +316,7 @@
             </div>
         </div>
 
+        <!-- TAB 3: ANALYTICS -->
         <div id="tab3" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-4">
                 <div class="gradio-section-header">📊 Practice Case Analysis</div>
@@ -329,6 +340,7 @@
             </div>
         </div>
 
+        <!-- TAB 4: MEDICAL UPDATES -->
         <div id="tab4" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-3">
                 <div class="gradio-section-header flex justify-between items-center">
@@ -341,6 +353,7 @@
             </div>
         </div>
 
+        <!-- TAB 5: DOCTORS' LOUNGE -->
         <div id="tab5" class="space-y-4 hidden">
             <div class="gradio-card p-4 space-y-4">
                 <div class="gradio-section-header">💬 Doctors' Lounge — Peer Consultation Forum</div>
@@ -348,7 +361,7 @@
                 <div class="border border-slate-200 rounded-lg p-3 bg-slate-50 space-y-2">
                     <span class="font-bold text-xs text-slate-800">Share Clinical Case or Ask Peers</span>
                     <input type="text" id="forum_title" placeholder="Case Title (e.g., Persistent Dry Cough in 45M)" class="w-full p-2 text-xs border border-slate-300 rounded-md">
-                    <textarea id="forum_content" rows="3" placeholder="Describe symptoms, vitals, or clinical scenario (Do not include patient identifiers)..." class="w-full p-2 text-xs border border-slate-300 rounded-md"></textarea>
+                    <textarea id="forum_content" rows="3" placeholder="Describe symptoms, vitals, or clinical scenario..." class="w-full p-2 text-xs border border-slate-300 rounded-md"></textarea>
                     <button type="button" onclick="postForumCase()" class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs py-2 px-4 rounded-md">
                         Post Case to Lounge
                     </button>
@@ -362,6 +375,7 @@
 
     </div>
 
+    <!-- PRINTABLE PRESCRIPTION CONTAINER -->
     <div id="printSection" class="print-only text-black p-6">
         <div class="border-b-2 border-slate-900 pb-3 mb-4 flex justify-between items-start">
             <div>
@@ -397,8 +411,8 @@
                 <p class="mt-8">______________________</p>
             </div>
         </div>
-                        </div>
-                        <script>
+    </div>
+    <script>
     const API_BASE = "https://opd-express-ai.onrender.com";
     let isSignupMode = false;
     let mediaRecorder = null;
@@ -501,7 +515,7 @@
         if (tabId === 'tab5') loadForumPosts();
     }
 
-    // Audio Dictation & Live Speech Recognition Stream
+    // Audio Dictation & Speech Streaming
     async function toggleMic() {
         const micBtn = document.getElementById("micBtn");
         const status = document.getElementById("recordingStatus");
@@ -511,13 +525,14 @@
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 
-                let mimeType = 'audio/webm';
-                if (!MediaRecorder.isTypeSupported('audio/webm')) {
-                    if (MediaRecorder.isTypeSupported('audio/mp4')) mimeType = 'audio/mp4';
-                    else mimeType = '';
+                let options = {};
+                if (MediaRecorder.isTypeSupported('audio/webm')) {
+                    options = { mimeType: 'audio/webm' };
+                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    options = { mimeType: 'audio/mp4' };
                 }
 
-                mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+                mediaRecorder = new MediaRecorder(stream, options);
                 audioChunks = [];
 
                 mediaRecorder.ondataavailable = (e) => {
@@ -530,7 +545,7 @@
 
                 mediaRecorder.start(500);
 
-                // Start Live Speech Recognition Stream
+                // Speech Recognition stream
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (SpeechRecognition) {
                     speechRecognizer = new SpeechRecognition();
@@ -610,7 +625,7 @@
                 if (data.patient_sex) document.getElementById("patient_sex").value = data.patient_sex;
                 if (data.patient_phone) document.getElementById("patient_phone").value = data.patient_phone;
                 
-                // Assign individual vitals
+                // Assign individual vital fields correctly
                 if (data.v_bp) document.getElementById("v_bp").value = data.v_bp;
                 if (data.v_pulse) document.getElementById("v_pulse").value = data.v_pulse;
                 if (data.v_spo2) document.getElementById("v_spo2").value = data.v_spo2;
@@ -679,7 +694,7 @@
                 banner.classList.remove("hidden");
                 banner.innerText = "✅ Saved Successfully | Patient: " + payload.patient_name;
 
-                // AUTO-CLEAR PATIENT DETAILS & VITALS (PRESERVE DOCTOR HEADER)
+                // Reset Patient Details & Vitals
                 document.getElementById("patient_name").value = "";
                 document.getElementById("patient_age").value = "";
                 document.getElementById("patient_sex").value = "";
@@ -832,6 +847,107 @@
                 container.innerHTML = data.data.map(item => `
                     <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 space-y-1">
                         <div class="flex justify-between font-bold text-xs text-slate-800">
+                            <span>👤 ${item.patient_name} (${item.patient_age || 'N/A'}, ${item.patient_sex || 'N/A'}) - ${item.patient_phone}</span>
+                            <span class="text-slate-500">${new Date(item.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-xs text-slate-600"><strong>Diagnosis:</strong> ${item.diagnosis || 'N/A'}</p>
+                        <p class="text-xs text-slate-600"><strong>Vitals:</strong> ${item.vitals || 'N/A'}</p>
+                        <p class="text-xs font-mono text-slate-700"><strong>Rx:</strong> ${item.medications || 'N/A'}</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = "<p class='text-xs text-red-500'>No records found.</p>";
+            }
+        } catch (err) {
+            container.innerHTML = "<p class='text-xs text-red-500'>Search failed: " + err.message + "</p>";
+        }
+    }
+
+    async function loadAnalytics() {
+        const docId = document.getElementById("doctor_id").value;
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/analytics/summary?doctor_id=${docId}`);
+            const data = await res.json();
+
+            if (res.ok) {
+                document.getElementById("stat_total").innerText = data.total_consultations;
+                document.getElementById("stat_top").innerText = data.top_diagnosis;
+
+                const breakdown = data.breakdown;
+                const container = document.getElementById("stat_breakdown");
+                if (Object.keys(breakdown).length === 0) {
+                    container.innerHTML = "<p class='text-slate-400 italic'>No records committed yet.</p>";
+                } else {
+                    container.innerHTML = Object.entries(breakdown).map(([diag, count]) => `
+                        <div class="flex justify-between border-b border-slate-200 pb-1">
+                            <span>${diag}</span>
+                            <span class="font-bold text-indigo-600">${count} visit(s)</span>
+                        </div>
+                    `).join('');
+                }
+            }
+        } catch (err) {
+            console.log("Analytics Load Error:", err);
+        }
+    }
+
+    async function loadMedicalNews() {
+        const container = document.getElementById("newsContainer");
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/news/medical`);
+            const data = await res.json();
+            if (res.ok && data.articles && data.articles.length > 0) {
+                container.innerHTML = data.articles.map(art => `
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 space-y-1">
+                        <a href="${art.link}" target="_blank" class="font-bold text-xs text-indigo-700 hover:underline block">${art.title}</a>
+                        <p class="text-[10px] text-slate-400">${art.pubDate}</p>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = "<p class='text-xs text-slate-500'>No medical updates available.</p>";
+            }
+        } catch (err) {
+            container.innerHTML = "<p class='text-xs text-red-500'>Failed to load news feed.</p>";
+        }
+    }
+
+    async function postForumCase() {
+        const docId = document.getElementById("doctor_id").value;
+        const docName = document.getElementById("doctor_name").value || "Verified Doctor";
+        const title = document.getElementById("forum_title").value.trim();
+        const content = document.getElementById("forum_content").value.trim();
+
+        if (!title || !content) return alert("Enter both title and clinical description.");
+
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/forum/posts/create`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ doctor_id: docId, doctor_name: docName, title, content, category: "General Case" })
+            });
+            if (res.ok) {
+                alert("Case posted to Doctors' Lounge!");
+                document.getElementById("forum_title").value = "";
+                document.getElementById("forum_content").value = "";
+                loadForumPosts();
+            } else {
+                const errData = await res.json();
+                alert("Post Failed: " + (errData.detail || "Database error"));
+            }
+        } catch (err) {
+            alert("Post Error: " + err.message);
+        }
+    }
+
+    async function loadForumPosts() {
+        const container = document.getElementById("forumPostsContainer");
+        try {
+            const res = await fetch(`${API_BASE}/api/v1/forum/posts/list`);
+            const data = await res.json();
+            if (res.ok && data.data && data.data.length > 0) {
+                container.innerHTML = data.data.map(p => `
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 space-y-1">
+                        <div class="flex justify-between items-center text-xs text-slate-500 font-medium">
                             <span>👤 ${p.doctor_name || 'Verified Doctor'}</span>
                             <span>${new Date(p.created_at).toLocaleDateString()}</span>
                         </div>
