@@ -464,25 +464,71 @@
     }
 
     function initSession() {
-        const userId = localStorage.getItem("docscribe_user_id");
-        const email = localStorage.getItem("docscribe_email");
+    const userId = localStorage.getItem("docscribe_user_id");
+    const email = localStorage.getItem("docscribe_email");
 
-        if (userId && email) {
-            document.getElementById("doctor_id").value = userId;
-            document.getElementById("userBadge").innerText = email;
-            document.getElementById("authModal").classList.add("hidden");
-            document.getElementById("mainApp").classList.remove("hidden");
-            loadCustomMedicines();
-        } else {
-            document.getElementById("authModal").classList.remove("hidden");
-            document.getElementById("mainApp").classList.add("hidden");
+    if (userId && email) {
+        document.getElementById("doctor_id").value = userId;
+        document.getElementById("userBadge").innerText = email;
+        document.getElementById("authModal").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+
+        // 🟢 RESTORE SAVED DOCTOR & CLINIC PROFILE FROM LOCALSTORAGE
+        if (localStorage.getItem("doc_name")) {
+            document.getElementById("doctor_name").value = localStorage.getItem("doc_name");
         }
+        if (localStorage.getItem("doc_qual")) {
+            document.getElementById("doctor_qualification").value = localStorage.getItem("doc_qual");
+        }
+        if (localStorage.getItem("doc_reg")) {
+            document.getElementById("doctor_reg_no").value = localStorage.getItem("doc_reg");
+        }
+        if (localStorage.getItem("doc_hospital")) {
+            document.getElementById("hospital_name").value = localStorage.getItem("doc_hospital");
+        }
+
+        // 🟢 ATTACH LISTENERS TO SAVE CHANGES AS DOCTOR TYPES
+        ["doctor_name", "doctor_qualification", "doctor_reg_no", "hospital_name"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener("input", saveProfileToLocalStorage);
+            }
+        });
+
+        loadCustomMedicines();
+    } else {
+        document.getElementById("authModal").classList.remove("hidden");
+        document.getElementById("mainApp").classList.add("hidden");
     }
+}
+
+// 🟢 HELPER FUNCTION TO SAVE HEADER FIELDS
+function saveProfileToLocalStorage() {
+    localStorage.setItem("doc_name", document.getElementById("doctor_name").value);
+    localStorage.setItem("doc_qual", document.getElementById("doctor_qualification").value);
+    localStorage.setItem("doc_reg", document.getElementById("doctor_reg_no").value);
+    localStorage.setItem("doc_hospital", document.getElementById("hospital_name").value);
+}
+
 
     function logout() {
-        localStorage.clear();
-        location.reload();
+    // 🟢 PRESERVE DOCTOR PROFILE VALUES BEFORE CLEARING SESSION
+    const docName = localStorage.getItem("doc_name");
+    const docQual = localStorage.getItem("doc_qual");
+    const docReg = localStorage.getItem("doc_reg");
+    const docHospital = localStorage.getItem("doc_hospital");
+
+    localStorage.clear();
+
+    // 🟢 RE-STORE PROFILE VALUES SO NEXT LOGIN LOADS THEM
+    if (docName) localStorage.setItem("doc_name", docName);
+    if (docQual) localStorage.setItem("doc_qual", docQual);
+    if (docReg) localStorage.setItem("doc_reg", docReg);
+    if (docHospital) localStorage.setItem("doc_hospital", docHospital);
+
+    location.reload();
     }
+        
 
     window.onload = initSession;
 
